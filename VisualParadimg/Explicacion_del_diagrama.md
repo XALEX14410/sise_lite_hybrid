@@ -69,12 +69,15 @@ Por ejemplo, en `dbo_usuario.idUsuario`, "dbo_usuario" es el nombre de la tabla 
 
 **2. ¿Por qué el diagrama VPP parece confuso?**
 El diagrama VPP muestra muchas tablas y relaciones, lo que puede parecer complejo a primera vista. Sin embargo, esta sección del archivo está diseñada para explicar la lógica detrás de esa estructura y cómo cada tabla se relaciona, facilitando la comprensión del modelo de datos.
-
 # Ejemplo detallado de uso de SQL LEFT JOIN
 
 El LEFT JOIN en SQL permite combinar registros de dos tablas, mostrando todos los registros de la tabla izquierda (por ejemplo, dbo_usuario) y los registros coincidentes de la tabla derecha (por ejemplo, dbo_login_perfil). Si no hay coincidencia, los campos de la tabla derecha aparecerán como NULL.
 
-**Supongamos que queremos obtener la lista de usuarios junto con el nombre de su perfil:**
+**¿Por qué usar LEFT JOIN para mostrar el nombre del perfil en vez del idPerfil?**
+
+Normalmente, en la tabla dbo_usuario solo verías el número de idPerfil, lo que no es muy informativo. Al usar LEFT JOIN con dbo_login_perfil, puedes mostrar el texto descriptivo del perfil (por ejemplo, "admin" o "superadmin") en vez del número. Esto facilita la lectura y comprensión de los datos.
+
+**Ejemplo de consulta para obtener el nombre del perfil:**
 
 ```sql
 SELECT u.idUsuario, u.Usuario, u.Estado_Usuario, p.perfil
@@ -83,36 +86,23 @@ LEFT JOIN dbo_login_perfil p ON u.idPerfil = p.idPerfil;
 ```
 
 **Explicación del query:**
-- `SELECT u.idUsuario, u.Usuario, u.Estado_Usuario, p.perfil`: Selecciona el ID, nombre de usuario, estado y el nombre del perfil.
+- `SELECT u.idUsuario, u.Usuario, u.Estado_Usuario, p.perfil`: Selecciona el ID, nombre de usuario, estado y el nombre del perfil (texto).
 - `FROM dbo_usuario u`: Indica que la tabla principal es dbo_usuario, con alias "u".
 - `LEFT JOIN dbo_login_perfil p ON u.idPerfil = p.idPerfil`: Une la tabla dbo_login_perfil (alias "p") usando la relación entre idPerfil de ambas tablas. El LEFT JOIN asegura que todos los usuarios se muestren, incluso si no tienen perfil asignado.
 
 **Ejemplo de resultado con todos los campos:**
-| idUsuario | idPersona | idPerfil | idPlantel | idCarrera | nuevoUsuario | Usuario     | Contraseña | Estado_Usuario | correo_electronico     | fecha_de_creacion | fecha_de_modificacion | modalidad | id_nivel_academico | perfil     |
-|-----------|-----------|----------|-----------|-----------|--------------|-------------|------------|----------------|------------------------|-------------------|----------------------|-----------|--------------------|------------|
-| 1         | 101       | 1        | 1         | 1         | 1            | superadmin  | 1234       | activo         | super@admin.com        | 2025-08-01        | 2025-08-10           | escolar   | 1                  | superadmin |
-| 2         | 102       | 2        | 1         | 2         | 0            | admin       | adminpass  | activo         | admin@admin.com        | 2025-08-02        | 2025-08-11           | escolar   | 2                  | admin      |
-| 3         | 103       | 3        | 2         | 3         | 1            | usuario     | userpass   | inactivo       | usuario@correo.com     | 2025-08-03        | 2025-08-12           | mixta     | 2                  | NULL       |
+| idUsuario | idPersona | perfil     | idPlantel | idCarrera | nuevoUsuario | Usuario     | Contraseña | Estado_Usuario | correo_electronico     | fecha_de_creacion | fecha_de_modificacion | modalidad | id_nivel_academico |
+|-----------|-----------|------------|-----------|-----------|--------------|-------------|------------|----------------|------------------------|-------------------|----------------------|-----------|--------------------|
+| 1         | 101       | superadmin | 1         | 1         | 1            | superadmin  | 1234       | activo         | super@admin.com        | 2025-08-01        | 2025-08-10           | escolar   | 1                  |
+| 2         | 102       | admin      | 1         | 2         | 0            | admin       | adminpass  | activo         | admin@admin.com        | 2025-08-02        | 2025-08-11           | escolar   | 2                  |
+| 3         | 103       | NULL       | 2         | 3         | 1            | usuario     | userpass   | inactivo       | usuario@correo.com     | 2025-08-03        | 2025-08-12           | mixta     | 2                  |
 
-En este ejemplo, si el usuario tiene un perfil válido, se muestra el nombre del perfil. Si no existe coincidencia en dbo_login_perfil, el campo "perfil" será NULL.
+
+En este ejemplo, en vez de mostrar solo el número de idPerfil, se muestra el nombre del perfil. Si el usuario no tiene perfil asignado, el campo "perfil" será NULL.
 
 **Ventajas del LEFT JOIN:**
 - Permite identificar usuarios sin perfil asignado.
-- Es útil para reportes y auditorías donde se requiere mostrar todos los registros de una tabla principal, independientemente de la existencia de datos relacionados en la tabla secundaria.
-
-**Comentarios en el query:**
-```sql
-SELECT 
-    u.idUsuario,           -- Identificador único del usuario
-    u.Usuario,             -- Nombre de usuario
-    u.Estado_Usuario,      -- Estado del usuario (activo/inactivo)
-    p.perfil               -- Nombre del perfil (puede ser NULL)
-FROM dbo_usuario u         -- Tabla principal: usuarios
-LEFT JOIN dbo_login_perfil p   -- Tabla secundaria: perfiles
-    ON u.idPerfil = p.idPerfil -- Relación entre usuario y perfil
-```
-
-Este tipo de consulta es fundamental para obtener información completa y detectar posibles inconsistencias o datos faltantes en la relación entre tablas.
+- Muestra información más clara y descriptiva en los reportes, usando el nombre del perfil en vez del número.
 
 ---
 
