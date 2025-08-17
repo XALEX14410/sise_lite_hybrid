@@ -1,4 +1,4 @@
-[Ver diagrama directamente en GitDiagram](https://gitdiagram.com/ORGANIGRAMA.md)
+
 ## Funciones de los colaboradores
 
 - **XALEX14410 (Líder del proyecto):** Coordina el desarrollo, toma decisiones clave y supervisa el avance general.
