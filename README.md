@@ -1,10 +1,18 @@
 # sise_lite_hybrid
 
+## Introducción
+Este repositorio está dedicado al desarrollo de un sitio web para una institución académica. El nombre "hybrid" se debe a que, en otro repositorio relacionado, se plantea la integración y conexión con dispositivos móviles, permitiendo una experiencia multiplataforma para los usuarios.
+
+## Índice
+1. Estado actual
+2. Estructura del proyecto
+3. Próximos pasos
+4. Autor
+
 Este proyecto corresponde al desarrollo de una página web para una institución educativa.
 
 ## Estado actual
-- Se ha creado el diagrama entidad-relación (ER) en la carpeta `VisualParadimg/`.
-- El archivo principal del diagrama es `sise_sql_hybrid.vpp`.
+- Se agregaron notas de explicación breve y descripciones iniciales en el diagrama, que seguirán creciendo conforme avance el proyecto.
 
 ## Estructura del proyecto
 - `VisualParadimg/`: Contiene el diagrama ER y sus respaldos.
