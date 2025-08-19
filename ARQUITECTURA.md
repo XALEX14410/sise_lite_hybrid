@@ -13,9 +13,9 @@
 
 mermaid
 flowchart LR
-    Cliente[ "Cliente (JS)" ] --> WebServer[ "Servidor Web (PHP)" ]
-    WebServer --> DB[ "Base de Datos (MariaDB)" ]
-    WebServer --> Archivos[ "Servicio de Archivos" ]
+    Cliente["Cliente (JS)"] --> WebServer["Servidor Web (PHP)"]
+    WebServer --> DB["Base de Datos (MariaDB)"]
+    WebServer --> Archivos["Servicio de Archivos"]
     Cliente <--> WebServer
     subgraph Docker
         Cliente
