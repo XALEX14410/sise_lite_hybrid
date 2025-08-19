@@ -1,30 +1,18 @@
-# sise_lite_hybrid
+# Sistema de Gestión Escolar de Calificaciones
 
-## Introducción
-Este repositorio está dedicado al desarrollo de un sitio web para una institución académica. El nombre "hybrid" se debe a que, en otro repositorio relacionado, se plantea la integración y conexión con dispositivos móviles, permitiendo una experiencia multiplataforma para los usuarios.
+Este proyecto implementa un sistema de gestión escolar para el registro y consulta de calificaciones, utilizando arquitectura cliente/servidor, modelo MVC, servicio web con PHP, JS y MariaDB, y despliegue en contenedores Docker.
 
-## Índice
-1. Estado actual
-2. Estructura del proyecto
-3. Próximos pasos
-4. Autor
+## Objetivos
+- Diseñar y documentar la arquitectura del sistema.
+- Planificar la ejecución del proyecto en Jira.
+- Coordinar la integración de módulos y validación multi-equipo.
+- Garantizar el cumplimiento de requisitos técnicos desde el primer parcial.
 
-Este proyecto corresponde al desarrollo de una página web para una institución educativa.
+## Repositorio
+Toda la documentación y avances estarán disponibles en este repositorio.
 
-## Estado actual
-- Se agregaron notas de explicación breve y descripciones iniciales en el diagrama, que seguirán creciendo conforme avance el proyecto.
-
-## Estructura del proyecto
-- `VisualParadimg/`: Contiene el diagrama ER y sus respaldos.
-- Próximamente se agregarán módulos para gestión de usuarios, cursos, calificaciones y más.
-
-## Próximos pasos
-- Definir los modelos de datos basados en el diagrama ER.
-- Implementar la base de datos y la lógica de backend.
-- Desarrollar la interfaz de usuario.
-
-## Autor
-XALEX14410
+## Equipo
+Ver ORGANIGRAMA.md para roles y funciones.
 
 ---
 Este archivo README se irá actualizando conforme avance el desarrollo.
