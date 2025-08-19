@@ -11,7 +11,7 @@
 
 ## Diagrama de Arquitectura
 
-
+```mermaid
 flowchart LR
     Cliente["Cliente (JS)"] --> WebServer["Servidor Web (PHP)"]
     WebServer --> DB["Base de Datos (MariaDB)"]
@@ -22,6 +22,7 @@ flowchart LR
         WebServer
         DB
     end
+```
 
 
 ## Detalles Técnicos
