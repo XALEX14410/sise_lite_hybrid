@@ -10,6 +10,8 @@
 - Despliegue en tres contenedores Docker distribuidos en diferentes equipos.
 
 ## Diagrama de Arquitectura
+
+```mermaid
 flowchart LR
     Cliente[ "Cliente (JS)" ] --> WebServer[ "Servidor Web (PHP)" ]
     WebServer --> DB[ "Base de Datos (MariaDB)" ]
@@ -21,6 +23,7 @@ flowchart LR
         DB
     end
 
+```
 
 ## Detalles Técnicos
 - Comunicación entre equipos mediante red local y APIs REST.
