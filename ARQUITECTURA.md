@@ -11,7 +11,7 @@
 
 ## Diagrama de Arquitectura
 
-```mermaid
+mermaid
 flowchart LR
     Cliente[ "Cliente (JS)" ] --> WebServer[ "Servidor Web (PHP)" ]
     WebServer --> DB[ "Base de Datos (MariaDB)" ]
@@ -22,7 +22,7 @@ flowchart LR
         WebServer
         DB
     end
-```
+
 
 ## Detalles Técnicos
 - Comunicación entre equipos mediante red local y APIs REST.
