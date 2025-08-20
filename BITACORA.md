@@ -44,3 +44,5 @@ Se realizaron cambios en el diagrama `sise_sql_hybrid.vpp`:
 ---
 
 *Agrega aquí nuevos registros conforme avance el proyecto.*
+
+alexis no ha hecho nada
