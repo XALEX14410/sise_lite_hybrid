@@ -54,6 +54,7 @@ Define los perfiles o roles que pueden tener los usuarios.
 |----------|-------------|
 | 1        | superadmin  |
 | 2        | admin       |
+| 3        | estudiante       |
 
 
 **Explicación de campos:**
@@ -95,7 +96,7 @@ LEFT JOIN dbo_login_perfil p ON u.idPerfil = p.idPerfil;
 |-----------|-----------|------------|-----------|-----------|--------------|-------------|------------|----------------|------------------------|-------------------|----------------------|-----------|--------------------|
 | 1         | 101       | superadmin | 1         | 1         | 1            | superadmin  | 1234       | activo         | super@admin.com        | 2025-08-01        | 2025-08-10           | escolar   | 1                  |
 | 2         | 102       | admin      | 1         | 2         | 0            | admin       | adminpass  | activo         | admin@admin.com        | 2025-08-02        | 2025-08-11           | escolar   | 2                  |
-| 3         | 103       | NULL       | 2         | 3         | 1            | usuario     | userpass   | inactivo       | usuario@correo.com     | 2025-08-03        | 2025-08-12           | mixta     | 2                  |
+| 3         | 103       | estudiante       | 2         | 3         | 1            | usuario     | userpass   | inactivo       | usuario@correo.com     | 2025-08-03        | 2025-08-12           | mixta     | 2                  |
 
 
 En este ejemplo, en vez de mostrar solo el número de idPerfil, se muestra el nombre del perfil. Si el usuario no tiene perfil asignado, el campo "perfil" será NULL.
