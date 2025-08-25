@@ -1,0 +1,5 @@
+%% Diagrama (Mermaid) - Arquitectura centralizada
+flowchart LR
+  U[Usuario] -->|HTTPS| WEB[Frontend (Next.js)]
+  WEB -->|fetch| API[API (Node.js)]
+  API --> DB[(MariaDB)]
