@@ -1,4 +1,4 @@
-# Documento de Arquitectura — Next.js + Node.js + MariaDB 
+# Documento de Arquitectura — Next.js + Node.js + MariaDB
 
 **Fecha:** 2025-08-25  
 **Arquitecto:** @XALEX14410  
@@ -29,7 +29,7 @@ Ver `diagrams/arquitectura.mmd` (Mermaid).
 flowchart LR
   U[Usuario] -->|HTTPS| WEB[Frontend (Next.js)]
   WEB -->|fetch| API[API (Node.js)]
-  API --> DB[(MariaDB)]
+  API -->|SQL| DB[(MariaDB)]
 ```
 
 ## 5) Flujos de comunicación (resumen)
@@ -71,8 +71,8 @@ flowchart LR
 - Si el dueño del área es autor, el 2.º revisor será **@XALEX14410** o el dueño del área predominante alternativa.
 
 ## 9) Definition of Done (historia)
--  Diagrama con cliente, servidor (web/API), BD y servicios.  
--  Tipo de arquitectura **centralizada** con **justificación**.  
--  Formato editable en repo compartido.  
--  Documento con **flujos de comunicación**.  
--  **Validación por 2 miembros** (ver plantilla de PR).
+- Diagrama con cliente, servidor (web/API), BD y servicios.  
+- Tipo de arquitectura **centralizada** con **justificación**.  
+- Formato editable en repo compartido.  
+- Documento con **flujos de comunicación**.  
+- **Validación por 2 miembros** (ver plantilla de PR).
