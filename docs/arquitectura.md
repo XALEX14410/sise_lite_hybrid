@@ -27,10 +27,11 @@ Ver `diagrams/arquitectura.mmd` (Mermaid).
 
 ```mermaid
 flowchart LR
-  U[Usuario] -->|HTTPS| WEB[Frontend (Next.js)]
-  WEB -->|fetch| API[API (Node.js)]
-  API -->|SQL| DB[(MariaDB)]
+  U[Usuario] -->|HTTPS| WEB[Frontend [Next.js]]
+  WEB -->|fetch| API[API [Node.js]]
+  API -->|SQL| DB[MariaDB]
 ```
+
 
 ## 5) Flujos de comunicación (resumen)
 1. **SSR/ISR:** Next.js renderiza páginas en servidor y obtiene datos desde la API.  
