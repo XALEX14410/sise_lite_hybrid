@@ -27,9 +27,10 @@ Ver `diagrams/arquitectura.mmd` (Mermaid).
 
 ```mermaid
 flowchart LR
-  U[Usuario] -->|HTTPS| WEB[Frontend [Next.js]]
-  WEB -->|fetch| API[API [Node.js]]
-  API -->|SQL| DB[MariaDB]
+  U["Usuario"] -- "HTTPS" --> WEB["Frontend (Next.js)"]
+  WEB -- "fetch" --> API["API (Node.js)"]
+  API -- "SQL" --> DB[(MariaDB)]
+
 ```
 
 
