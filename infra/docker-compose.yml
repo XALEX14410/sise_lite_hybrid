@@ -29,5 +29,11 @@ services:
     ports: ["3000:3000"]
     depends_on: [api]
 
+  backend:
+    build:
+      context: ../../backend
+    ports:
+      - "9000:9000"
+  
 volumes:
   db_data:
