@@ -1,0 +1,11 @@
+%% Diagrama (Mermaid) - Arquitectura centralizada
+flowchart LR
+  U["Usuario"] -- "HTTPS" --> WEB["Frontend (Next.js)"]
+  WEB -- "fetch (JSON)" --> API["API (Node.js)"]
+  API -- "SQL" --> DB[(MariaDB)]
+
+  subgraph "Docker Compose"
+    WEB
+    API
+    DB
+  end

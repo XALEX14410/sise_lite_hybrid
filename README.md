@@ -1,18 +1,14 @@
-# Sistema de Gestión Escolar de Calificaciones
+# Arquitectura (con usuarios y gobernanza)
 
-Este proyecto implementa un sistema de gestión escolar para el registro y consulta de calificaciones, utilizando arquitectura cliente/servidor, modelo MVC, servicio web con PHP, JS y MariaDB, y despliegue en contenedores Docker.
+**Fecha:** 2025-08-25  
+Stack: Next.js + Node.js + MariaDB (Docker)  
+Revisores: ver `/.github/CODEOWNERS`
 
-## Objetivos
-- Diseñar y documentar la arquitectura del sistema.
-- Planificar la ejecución del proyecto en Jira.
-- Coordinar la integración de módulos y validación multi-equipo.
-- Garantizar el cumplimiento de requisitos técnicos desde el primer parcial.
-
-## Repositorio
-Toda la documentación y avances estarán disponibles en este repositorio.
-
-## Equipo
-Ver ORGANIGRAMA.md para roles y funciones.
-
----
-Este archivo README se irá actualizando conforme avance el desarrollo.
+## Arranque rápido
+```bash
+cp .env.example .env
+docker compose up -d --build
+# Web: http://localhost:3000
+# API: http://localhost:4000
+# DB:  localhost:3306
+```
