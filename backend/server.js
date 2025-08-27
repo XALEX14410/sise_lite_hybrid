@@ -1,10 +1,5 @@
 import express from 'express';
 import morgan from 'morgan'; 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 9000;
@@ -14,7 +9,11 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Hay que darnos de baja' });
+    res.status(200).json({ message: 'status:ok' });
+});
+
+app.get('/prueba', (req, res) => {
+    res.status(200).json({ message: 'Este es solo de prueba, pronto se tendrá más si Dios quiere y lo permite' });
 });
 
 app.listen(PORT, () => {
