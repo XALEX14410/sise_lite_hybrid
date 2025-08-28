@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  web:
+    image: nginx
+    ports:
+    - "8081:80"
+  db:
+    image: mariadb:11.4
+    environment:
+     MARIADB_ROOT_PASSWORD: root123
+     MARIADB_DATABASE: testdb   

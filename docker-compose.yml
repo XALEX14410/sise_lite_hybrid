@@ -11,10 +11,10 @@ services:
     container_name: sise-lite-db
     # Define variables de entorno para la configuración de la base de datos.
     environment:
-      MARIADB_DATABASE: ${DB_NAME}
-      MARIADB_USER: ${DB_USER}
-      MARIADB_PASSWORD: ${DB_PASS}
-      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASS}
+      MARIADB_DATABASE: siselite
+#      MARIADB_USER: ${DB_USER}
+ #     MARIADB_PASSWORD: ${DB_PASS}
+      MARIADB_ROOT_PASSWORD: root123
     # Mapea el puerto del contenedor (3306) al puerto de tu máquina (3306).
     ports:
       - "3306:3306"
@@ -35,7 +35,6 @@ services:
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       API_PORT: 9000
-    # Mapea el puerto del contenedor (9000) al puerto de tu máquina (9000).
     ports:
       - "9000:9000"  # Cambiado a 9000 para que coincida con el puerto de backend
     # Asegura que la base de datos se inicie antes que la API.
