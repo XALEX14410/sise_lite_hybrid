@@ -1,14 +1,31 @@
-Antes de ejecutar cualquier script para crear las tablas, primero debes crear la base de datos.  
+## Guía para crear la base de datos y tablas
+
+Antes de importar las tablas, asegúrate de **crear primero la base de datos**.
+
+### 1. Crear la base de datos
+
+Ejecuta el siguiente comando en tu gestor SQL:
 
 ```sql
 CREATE DATABASE nombre_de_la_base_de_datos;
-Una vez creada la base de datos, puedes importar las tablas utilizando el archivo `sisesqlhybrid.sql` que se encuentra en esta carpeta.
-
-- **Desde una interfaz gráfica**: Busca la opción para importar o ejecutar un script SQL y selecciona el archivo `sisesqlhybrid.sql`.
-- **Desde la terminal**: Usa el siguiente comando, reemplazando los valores según corresponda:
-
-```bash
-mysql -u usuario -p nombre_de_la_base_de_datos < sisesqlhybrid.sql
 ```
 
-Esto creará todas las tablas y estructuras necesarias en la base de datos.
+### 2. Importar las tablas
+
+El archivo `sisesqlhybrid.sql` contiene todas las tablas y estructuras necesarias.
+
+#### Opciones para importar:
+
+- **Interfaz gráfica**  
+    Utiliza la opción de importar o ejecutar script SQL y selecciona el archivo `sisesqlhybrid.sql`.
+
+- **Terminal**  
+    Ejecuta el siguiente comando, reemplazando los valores según corresponda:
+
+    ```bash
+    mysql -u usuario -p nombre_de_la_base_de_datos < sisesqlhybrid.sql
+    ```
+
+---
+
+Una vez completados estos pasos, tendrás todas las tablas y estructuras listas en tu base de datos.
