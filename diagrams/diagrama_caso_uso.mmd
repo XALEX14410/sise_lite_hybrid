@@ -1,98 +1,161 @@
 flowchart LR
-  %% ========== Actores ==========
-  A[Usuario]:::actor
-  AL[Alumno]:::actor
-  DO[Docente]:::actor
-  AD[Admin / Superadmin]:::actor
-  CO[Coordinación Académica]:::actor
-  FI[Finanzas / Caja]:::actor
-  AU[Auditor]:::actor
+    %% ========== Actores ==========
+    subgraph Actores
+        direction TB
+        A[Usuario]:::actor
+        AL[Alumno]:::actor
+        DO[Docente]:::actor
+        AD[Admin / Superadmin]:::actor
+        CO[Coordinación Académica]:::actor
+        FI[Finanzas / Caja]:::actor
+        AU[Auditor]:::actor
+    end
 
-  %% Herencia simple de "Usuario"
-  A --- AL
-  A --- DO
-  A --- AD
-  A --- CO
-  A --- FI
-  A --- AU
+    %% Herencia simple de "Usuario"
+    A --- AL
+    A --- DO
+    A --- AD
+    A --- CO
+    A --- FI
+    A --- AU
 
-  %% ========== Casos de uso (óvalos simulados con nodos circulares) ==========
-  %% Autenticación y accesos
-  UC_Login(((Iniciar sesión)))
-  UC_Tutorial(((Ver/ocultar tutorial)))
-  UC_Perfil(((Asignar perfiles a usuario)))
-  UC_Menu(((Configurar menú y accesos)))
+    %% ========== Casos de uso ==========
+    subgraph Autenticación y accesos
+        direction TB
+        UC_Login(((Iniciar sesión)))
+        UC_Tutorial(((Ver/ocultar tutorial)))
+        UC_Perfil(((Asignar perfiles a usuario)))
+        UC_Menu(((Configurar menú y accesos)))
+    end
 
-  %% Catálogos
-  UC_CatGeo(((Gestionar estados y municipios)))
-  UC_Plantel(((Gestionar planteles)))
-  UC_Carrera(((Gestionar carreras)))
-  UC_Materia(((Gestionar materias)))
+    subgraph Catálogos
+        direction TB
+        UC_CatGeo(((Gestionar estados y municipios)))
+        UC_Plantel(((Gestionar planteles)))
+        UC_Carrera(((Gestionar carreras)))
+        UC_Materia(((Gestionar materias)))
+    end
 
-  %% Personas y usuarios
-  UC_Persona(((Gestionar personas)))
-  UC_Usuario(((Gestionar usuarios)))
-  UC_UsuGrupo(((Asignar grupo por defecto a usuario)))
+    subgraph Personas y usuarios
+        direction TB
+        UC_Persona(((Gestionar personas)))
+        UC_Usuario(((Gestionar usuarios)))
+        UC_UsuGrupo(((Asignar grupo por defecto a usuario)))
+    end
 
-  %% Académico
-  UC_Carga(((Gestionar carga académica)))
-  UC_Grupo(((Gestionar grupos)))
-  UC_Horario(((Gestionar horarios)))
-  UC_Ins(((Inscribir alumno a grupo)))
-  UC_Calif(((Registrar/actualizar calificaciones)))
-  UC_VerCalif(((Consultar calificaciones)))
-  UC_VerHorario(((Consultar horario)))
+    subgraph Académico
+        direction TB
+        UC_Carga(((Gestionar carga académica)))
+        UC_Grupo(((Gestionar grupos)))
+        UC_Horario(((Gestionar horarios)))
+        UC_Ins(((Inscribir alumno a grupo)))
+        UC_Calif(((Registrar/actualizar calificaciones)))
+        UC_VerCalif(((Consultar calificaciones)))
+        UC_VerHorario(((Consultar horario)))
+    end
 
-  %% Becas y pagos
-  UC_Beca(((Gestionar becas)))
-  UC_Pago(((Registrar pagos)))
-  UC_VerPago(((Consultar estado de pagos)))
+    subgraph Becas y pagos
+        direction TB
+        UC_Beca(((Gestionar becas)))
+        UC_Pago(((Registrar pagos)))
+        UC_VerPago(((Consultar estado de pagos)))
+    end
 
-  %% Auditoría
-  UC_Log(((Registrar eventos de auditoría)))
-  UC_RevAud(((Revisar bitácora de auditoría)))
+    subgraph Auditoría
+        direction TB
+        UC_Log(((Registrar eventos de auditoría)))
+        UC_RevAud(((Revisar bitácora de auditoría)))
+    end
 
-  %% ========== Relación actores -> casos ==========
-  A --> UC_Login
-  A --> UC_Tutorial
+    %% ========== Relación actores -> casos ==========
+    A --> UC_Login
+    A --> UC_Tutorial
 
-  AD --> UC_Perfil
-  AD --> UC_Menu
-  AD --> UC_Persona
-  AD --> UC_Usuario
-  AD --> UC_UsuGrupo
-  AD --> UC_CatGeo
-  AD --> UC_Plantel
-  AD --> UC_Carrera
-  AD --> UC_Materia
+    AD --> UC_Perfil
+    AD --> UC_Menu
+    AD --> UC_Persona
+    AD --> UC_Usuario
+    AD --> UC_UsuGrupo
+    AD --> UC_CatGeo
+    AD --> UC_Plantel
+    AD --> UC_Carrera
+    AD --> UC_Materia
 
-  CO --> UC_Carga
-  CO --> UC_Grupo
-  CO --> UC_Horario
-  CO --> UC_Ins
+    CO --> UC_Carga
+    CO --> UC_Grupo
+    CO --> UC_Horario
+    CO --> UC_Ins
 
-  DO --> UC_Grupo
-  DO --> UC_Calif
-  DO --> UC_VerHorario
+    DO --> UC_Grupo
+    DO --> UC_Calif
+    DO --> UC_VerHorario
 
-  AL --> UC_Ins
-  AL --> UC_VerCalif
-  AL --> UC_VerHorario
-  AL --> UC_VerPago
+    AL --> UC_Ins
+    AL --> UC_VerCalif
+    AL --> UC_VerHorario
+    AL --> UC_VerPago
 
-  FI --> UC_Beca
-  FI --> UC_Pago
+    FI --> UC_Beca
+    FI --> UC_Pago
 
-  AU --> UC_RevAud
+    AU --> UC_RevAud
 
-  %% ========== Inclusiones a auditoría ==========
-  UC_Login --> UC_Log
-  UC_Usuario --> UC_Log
-  UC_Perfil --> UC_Log
-  UC_Grupo --> UC_Log
-  UC_Ins --> UC_Log
-  UC_Calif --> UC_Log
-  UC_Pago --> UC_Log
+    %% ========== Inclusiones a auditoría ==========
+    UC_Login --> UC_Log
+    UC_Usuario --> UC_Log
+    UC_Perfil --> UC_Log
+    UC_Grupo --> UC_Log
+    UC_Ins --> UC_Log
+    UC_Calif --> UC_Log
+    UC_Pago --> UC_Log
 
-  %% ========== Estilos simples compatibles con GitHub ==========
-  classDef actor fill:#f5f5f5,stroke:#555,stroke-width:1px,color:#1
+    %% ========== Estilos mejorados ==========
+    classDef actor fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1;
+    classDef usecase fill:#fffde7,stroke:#fbc02d,stroke-width:2px,color:#f57c00;
+    class UC_Login,UC_Tutorial,UC_Perfil,UC_Menu,UC_CatGeo,UC_Plantel,UC_Carrera,UC_Materia,UC_Persona,UC_Usuario,UC_UsuGrupo,UC_Carga,UC_Grupo,UC_Horario,UC_Ins,UC_Calif,UC_VerCalif,UC_VerHorario,UC_Beca,UC_Pago,UC_VerPago,UC_Log,UC_RevAud usecase;
+
+    %% ========== Etiquetas en los vértices ==========
+    %% Ejemplo de etiquetas explicativas en las relaciones
+    A -- "Puede iniciar sesión" --> UC_Login
+    A -- "Puede ver/ocultar tutorial" --> UC_Tutorial
+
+    AD -- "Configura perfiles" --> UC_Perfil
+    AD -- "Configura menú y accesos" --> UC_Menu
+    AD -- "Gestiona personas" --> UC_Persona
+    AD -- "Gestiona usuarios" --> UC_Usuario
+    AD -- "Asigna grupo por defecto" --> UC_UsuGrupo
+    AD -- "Gestiona estados y municipios" --> UC_CatGeo
+    AD -- "Gestiona planteles" --> UC_Plantel
+    AD -- "Gestiona carreras" --> UC_Carrera
+    AD -- "Gestiona materias" --> UC_Materia
+
+    CO -- "Gestiona carga académica" --> UC_Carga
+    CO -- "Gestiona grupos" --> UC_Grupo
+    CO -- "Gestiona horarios" --> UC_Horario
+    CO -- "Inscribe alumno a grupo" --> UC_Ins
+
+    DO -- "Gestiona grupos" --> UC_Grupo
+    DO -- "Registra/actualiza calificaciones" --> UC_Calif
+    DO -- "Consulta horario" --> UC_VerHorario
+
+    AL -- "Se inscribe a grupo" --> UC_Ins
+    AL -- "Consulta calificaciones" --> UC_VerCalif
+    AL -- "Consulta horario" --> UC_VerHorario
+    AL -- "Consulta estado de pagos" --> UC_VerPago
+
+    FI -- "Gestiona becas" --> UC_Beca
+    FI -- "Registra pagos" --> UC_Pago
+
+    AU -- "Revisa bitácora de auditoría" --> UC_RevAud
+
+    %% ========== Líneas más rectas ==========
+    %% Forzar líneas rectas usando enlaces -- en vez de -->
+    %% (no flecha, pero recto)
+    %% Ejemplo: A -- UC_Login
+    %% Puedes cambiar todas las relaciones de actores a casos de uso:
+    %% (Reemplaza --> por -- en las relaciones de actores a casos de uso)
+
+    %% Ejemplo:
+    %% A -- UC_Login
+    %% AD -- UC_Perfil
+    %% ...etc.
