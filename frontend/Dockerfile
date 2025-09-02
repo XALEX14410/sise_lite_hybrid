@@ -1,23 +1,15 @@
-# Usar Node.js oficial
-FROM node:20-alpine
-
-# Crear directorio de la app
+FROM node:18-alpine AS builder
 WORKDIR /app
-
-# Copiar package.json y package-lock.json
+ENV NEXT_TELEMETRY_DISABLED=1
 COPY package*.json ./
-
-# Instalar dependencias
-RUN npm install
-
-# Copiar el resto del código
+RUN npm ci
 COPY . .
-
-# Construir la app (Next.js)
 RUN npm run build
 
-# Exponer el puerto donde correrá la app
+FROM node:18-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+COPY --from=builder /app ./
 EXPOSE 3000
-
-# Comando para iniciar
-CMD ["npm", "start"]
+CMD ["npm","run","start"]
