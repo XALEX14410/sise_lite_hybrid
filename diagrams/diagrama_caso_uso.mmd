@@ -1,0 +1,98 @@
+flowchart LR
+  %% ========== Actores ==========
+  A[Usuario]:::actor
+  AL[Alumno]:::actor
+  DO[Docente]:::actor
+  AD[Admin / Superadmin]:::actor
+  CO[Coordinación Académica]:::actor
+  FI[Finanzas / Caja]:::actor
+  AU[Auditor]:::actor
+
+  %% Herencia simple de "Usuario"
+  A --- AL
+  A --- DO
+  A --- AD
+  A --- CO
+  A --- FI
+  A --- AU
+
+  %% ========== Casos de uso (óvalos simulados con nodos circulares) ==========
+  %% Autenticación y accesos
+  UC_Login(((Iniciar sesión)))
+  UC_Tutorial(((Ver/ocultar tutorial)))
+  UC_Perfil(((Asignar perfiles a usuario)))
+  UC_Menu(((Configurar menú y accesos)))
+
+  %% Catálogos
+  UC_CatGeo(((Gestionar estados y municipios)))
+  UC_Plantel(((Gestionar planteles)))
+  UC_Carrera(((Gestionar carreras)))
+  UC_Materia(((Gestionar materias)))
+
+  %% Personas y usuarios
+  UC_Persona(((Gestionar personas)))
+  UC_Usuario(((Gestionar usuarios)))
+  UC_UsuGrupo(((Asignar grupo por defecto a usuario)))
+
+  %% Académico
+  UC_Carga(((Gestionar carga académica)))
+  UC_Grupo(((Gestionar grupos)))
+  UC_Horario(((Gestionar horarios)))
+  UC_Ins(((Inscribir alumno a grupo)))
+  UC_Calif(((Registrar/actualizar calificaciones)))
+  UC_VerCalif(((Consultar calificaciones)))
+  UC_VerHorario(((Consultar horario)))
+
+  %% Becas y pagos
+  UC_Beca(((Gestionar becas)))
+  UC_Pago(((Registrar pagos)))
+  UC_VerPago(((Consultar estado de pagos)))
+
+  %% Auditoría
+  UC_Log(((Registrar eventos de auditoría)))
+  UC_RevAud(((Revisar bitácora de auditoría)))
+
+  %% ========== Relación actores -> casos ==========
+  A --> UC_Login
+  A --> UC_Tutorial
+
+  AD --> UC_Perfil
+  AD --> UC_Menu
+  AD --> UC_Persona
+  AD --> UC_Usuario
+  AD --> UC_UsuGrupo
+  AD --> UC_CatGeo
+  AD --> UC_Plantel
+  AD --> UC_Carrera
+  AD --> UC_Materia
+
+  CO --> UC_Carga
+  CO --> UC_Grupo
+  CO --> UC_Horario
+  CO --> UC_Ins
+
+  DO --> UC_Grupo
+  DO --> UC_Calif
+  DO --> UC_VerHorario
+
+  AL --> UC_Ins
+  AL --> UC_VerCalif
+  AL --> UC_VerHorario
+  AL --> UC_VerPago
+
+  FI --> UC_Beca
+  FI --> UC_Pago
+
+  AU --> UC_RevAud
+
+  %% ========== Inclusiones a auditoría ==========
+  UC_Login --> UC_Log
+  UC_Usuario --> UC_Log
+  UC_Perfil --> UC_Log
+  UC_Grupo --> UC_Log
+  UC_Ins --> UC_Log
+  UC_Calif --> UC_Log
+  UC_Pago --> UC_Log
+
+  %% ========== Estilos simples compatibles con GitHub ==========
+  classDef actor fill:#f5f5f5,stroke:#555,stroke-width:1px,color:#1
