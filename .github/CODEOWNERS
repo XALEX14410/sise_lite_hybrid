@@ -1,0 +1,5 @@
+# Archivo CODEOWNERS para definir el líder de proyecto como code owner
+# Solo XALEX14410 podrá aprobar PR en la rama develop
+
+# Para toda la rama develop
+refs/heads/develop @XALEX14410
