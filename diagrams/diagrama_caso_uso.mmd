@@ -1,4 +1,6 @@
+%%{init: {"themeVariables": {"background": "#ffffff"}}}%%
 flowchart LR
+
     %% ========== Actores ==========
     subgraph Actores
         direction TB
@@ -116,37 +118,38 @@ flowchart LR
 
     %% ========== Etiquetas en los vértices ==========
     %% Ejemplo de etiquetas explicativas en las relaciones
-    A -- "Puede iniciar sesión" --> UC_Login
-    A -- "Puede ver/ocultar tutorial" --> UC_Tutorial
 
-    AD -- "Configura perfiles" --> UC_Perfil
-    AD -- "Configura menú y accesos" --> UC_Menu
-    AD -- "Gestiona personas" --> UC_Persona
-    AD -- "Gestiona usuarios" --> UC_Usuario
-    AD -- "Asigna grupo por defecto" --> UC_UsuGrupo
-    AD -- "Gestiona estados y municipios" --> UC_CatGeo
-    AD -- "Gestiona planteles" --> UC_Plantel
-    AD -- "Gestiona carreras" --> UC_Carrera
-    AD -- "Gestiona materias" --> UC_Materia
+    A -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Puede iniciar sesión</span>" --> UC_Login
+    A -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Puede ver/ocultar tutorial</span>" --> UC_Tutorial
 
-    CO -- "Gestiona carga académica" --> UC_Carga
-    CO -- "Gestiona grupos" --> UC_Grupo
-    CO -- "Gestiona horarios" --> UC_Horario
-    CO -- "Inscribe alumno a grupo" --> UC_Ins
+    AD -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Configura perfiles</span>" --> UC_Perfil
+    AD -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Configura menú y accesos</span>" --> UC_Menu
+    AD -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Gestiona personas</span>" --> UC_Persona
+    AD -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Gestiona usuarios</span>" --> UC_Usuario
+    AD -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Asigna grupo por defecto</span>" --> UC_UsuGrupo
+    AD -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Gestiona estados y municipios</span>" --> UC_CatGeo
+    AD -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Gestiona planteles</span>" --> UC_Plantel
+    AD -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Gestiona carreras</span>" --> UC_Carrera
+    AD -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Gestiona materias</span>" --> UC_Materia
 
-    DO -- "Gestiona grupos" --> UC_Grupo
-    DO -- "Registra/actualiza calificaciones" --> UC_Calif
-    DO -- "Consulta horario" --> UC_VerHorario
+    CO -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Gestiona carga académica</span>" --> UC_Carga
+    CO -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Gestiona grupos</span>" --> UC_Grupo
+    CO -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Gestiona horarios</span>" --> UC_Horario
+    CO -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Inscribe alumno a grupo</span>" --> UC_Ins
 
-    AL -- "Se inscribe a grupo" --> UC_Ins
-    AL -- "Consulta calificaciones" --> UC_VerCalif
-    AL -- "Consulta horario" --> UC_VerHorario
-    AL -- "Consulta estado de pagos" --> UC_VerPago
+    DO -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Gestiona grupos</span>" --> UC_Grupo
+    DO -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Registra/actualiza calificaciones</span>" --> UC_Calif
+    DO -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Consulta horario</span>" --> UC_VerHorario
 
-    FI -- "Gestiona becas" --> UC_Beca
-    FI -- "Registra pagos" --> UC_Pago
+    AL -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Se inscribe a grupo</span>" --> UC_Ins
+    AL -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Consulta calificaciones</span>" --> UC_VerCalif
+    AL -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Consulta horario</span>" --> UC_VerHorario
+    AL -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Consulta estado de pagos</span>" --> UC_VerPago
 
-    AU -- "Revisa bitácora de auditoría" --> UC_RevAud
+    FI -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Gestiona becas</span>" --> UC_Beca
+    FI -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Registra pagos</span>" --> UC_Pago
+
+    AU -- "<span style='background:#fff;padding:2px 6px;border-radius:4px;'>Revisa bitácora de auditoría</span>" --> UC_RevAud
 
     %% ========== Líneas más rectas ==========
     %% Forzar líneas rectas usando enlaces -- en vez de -->
