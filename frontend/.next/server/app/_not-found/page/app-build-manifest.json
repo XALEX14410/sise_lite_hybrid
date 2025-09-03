@@ -1,12 +1,19 @@
 {
   "pages": {
     "/_not-found/page": [
-      "static/chunks/b62409e828304afb.js",
-      "static/chunks/5c98878141af1de4.css",
-      "static/chunks/d350eac61fc66146.js",
-      "static/chunks/880ccc78723314e0.js",
-      "static/chunks/92b683f024893916.js",
-      "static/chunks/turbopack-c9ab2962f9d4f9bb.js"
+      "static/chunks/5de05_next_dist_503f213e._.js",
+      "static/chunks/Documents_Git_proyecto_sise_lite_src_app_favicon_ico_mjs_106b93dd._.js",
+      "static/chunks/[root-of-the-server]__17b543a8._.css",
+      "static/chunks/Documents_Git_proyecto_sise_lite_src_app_layout_b7a9b236.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_db40081f._.js",
+      "static/chunks/5de05_next_dist_compiled_react-dom_d91b786d._.js",
+      "static/chunks/5de05_next_dist_compiled_next-devtools_index_95f92f53.js",
+      "static/chunks/5de05_next_dist_compiled_9eb24e93._.js",
+      "static/chunks/5de05_next_dist_client_cf734138._.js",
+      "static/chunks/5de05_next_dist_62aae08f._.js",
+      "static/chunks/5de05_@swc_helpers_cjs_34d90221._.js",
+      "static/chunks/Documents_Git_proyecto_sise_lite_a0ff3932._.js",
+      "static/chunks/turbopack-Documents_Git_proyecto_sise_lite_df2437a1._.js"
     ]
   }
 }
