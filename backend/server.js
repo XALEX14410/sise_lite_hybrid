@@ -3,14 +3,12 @@ const cors = require("cors");
 const pool = require('./src/db/pool');
 require('dotenv').config();
 
-const usuarioRoutes = require('./src/routes/usuarioRoutes');
 const estadoRoutes = require('./src/routes/estadosRoutes');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/estados', estadoRoutes);
 
 app.get('/api/status', (req, res) => {
