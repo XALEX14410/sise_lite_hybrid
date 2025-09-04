@@ -8,6 +8,7 @@ frontend/**          @Alex-LaLa
 
 # Base de datos (migraciones, esquemas)
 database/**          @Daniel37UwU
+diagrams/**          @Daniel37UwU
 
 # QA / Pruebas / Documentación
 tests/**             @Mora-Flores03
