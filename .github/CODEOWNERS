@@ -1,0 +1,24 @@
+# Archivo CODEOWNERS
+
+# Backend (Node.js)
+backend/**           @js-ph
+
+# Frontend (Next.js)
+frontend/**          @Alex-LaLa
+
+# Base de datos (migraciones, esquemas)
+database/**          @Daniel37UwU
+diagrams/**          @Daniel37UwU
+
+# QA / Pruebas / Documentación
+tests/**             @Mora-Flores03
+docs/**              @ClCrr
+*.md                 @ClCrr                  # README y docs en raíz
+/README.md           @ClCrr
+
+# Infraestructura / Docker / CI
+infra/**             @XALEX14410
+.github/**           @XALEX14410             # Workflows, rulesets, etc.
+
+# Catch-all: líder y QA
+*                    @XALEX14410 @Mora-Flores03
