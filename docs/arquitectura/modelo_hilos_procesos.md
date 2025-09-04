@@ -27,16 +27,17 @@ Node.js por defecto usa un solo hilo, pero para aprovechar todos los núcleos de
 
 ```mermaid
 flowchart TD
-        A[Inicio] --> B{¿Servidor tiene varios núcleos?}
-        B -- Sí --> C[Crear procesos con cluster]
-        B -- No --> D[Usar proceso único]
-        C --> E[Cada proceso maneja solicitudes]
-        E --> F{¿Tarea intensiva?}
-        F -- Sí --> G[Crear worker_thread]
-        F -- No --> H[Procesar en el hilo principal]
-        G --> I[Comunicación por mensajes]
-        H --> I
-        D --> H
+    A[Inicio] --> B{¿Servidor tiene varios núcleos?}
+    B -- Sí --> C[Crear procesos con cluster]
+    B -- No --> D[Usar proceso único]
+    C --> E[Cada proceso maneja solicitudes]
+    E --> F{¿Tarea intensiva?}
+    F -- Sí --> G[Crear worker_thread]
+    F -- No --> H[Procesar en el hilo principal]
+    G --> I[Comunicación por mensajes]
+    H --> I
+    D --> H
+    I --> Z[Fin]
 ```
 
 ## 4. Ejemplo de código (Node.js)
