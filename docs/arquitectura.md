@@ -23,14 +23,20 @@ Arquitectura **centralizada** y **simple**: Frontend en **Next.js**, API en **No
 - **Docker Compose:** Orquestación para arranque local de todos los servicios.
 
 ## 4) Diagrama general (editable)
-Ver `diagrams/arquitectura.mmd` (Mermaid).
+Ver `diagrams/sistema/arquitectura_sistema.mmd` (Mermaid).
 
 ```mermaid
+%% Diagrama general del sistema (ver archivo para explicación)
 flowchart LR
   U["Usuario"] -- "HTTPS" --> WEB["Frontend (Next.js)"]
-  WEB -- "fetch" --> API["API (Node.js)"]
+  WEB -- "fetch (JSON)" --> API["API (Node.js)"]
   API -- "SQL" --> DB[(MariaDB)]
 
+  subgraph "Docker Compose"
+    WEB
+    API
+    DB
+  end
 ```
 
 
@@ -73,8 +79,12 @@ flowchart LR
 - Si el dueño del área es autor, el 2.º revisor será **@XALEX14410** o el dueño del área predominante alternativa.
 
 ## 9) Definition of Done (historia)
-- Diagrama con cliente, servidor (web/API), BD y servicios.  
-- Tipo de arquitectura **centralizada** con **justificación**.  
-- Formato editable en repo compartido.  
-- Documento con **flujos de comunicación**.  
-- **Validación por 2 miembros** (ver plantilla de PR).
+
+
+
+La siguiente arquitectura ha sido revisada y validada por los siguientes miembros del equipo:
+
+- **@Mora-Flores03** (QA/Documentación) — 2025-09-04
+- **@XALEX14410** (Arquitecto) — 2025-09-04
+
+Se deja constancia de la validación para cumplir con la definición de "Done".
