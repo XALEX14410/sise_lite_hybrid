@@ -24,4 +24,9 @@ Este repositorio sigue un flujo de trabajo colaborativo para evitar conflictos y
 - **Política de commits y PRs:** Mensajes claros, PRs revisados por al menos 2 miembros, squash merge.
 - **Permisos:** Ramas protegidas, responsables definidos en CODEOWNERS.
 
+
 Consulta detalles y ejemplos en [`docs/GIT_WORKFLOW.md`](docs/GIT_WORKFLOW.md).
+
+### Restricciones en la rama develop
+Para conocer las reglas y el flujo correcto para trabajar con la rama `develop`, revisa el archivo:
+[`docs/devops/Restricciones en la rama develop.md`](docs/devops/Restricciones%20en%20la%20rama%20develop.md)
