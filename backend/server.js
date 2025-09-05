@@ -1,22 +1,21 @@
-import express from 'express';
-import morgan from 'morgan'; 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+const express = require('express');
+const cors = require("cors");
+const pool = require('./src/db/pool');
+require('dotenv').config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const estadoRoutes = require('./src/routes/estadosRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 9000;
-
-app.use(morgan('dev'));
-
 app.use(express.json());
+app.use(cors());
 
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Hay que darnos de baja' });
+app.use('/api/estados', estadoRoutes);
+
+app.get('/api/status', (req, res) => {
+  res.json({ message: 'Backend funcionando' });
 });
 
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-    console.log(`Servidor escuchando en el puerto ${PORT}`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
