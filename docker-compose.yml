@@ -5,8 +5,9 @@ version: "3.9"
 services:
   # Servicio de la base de datos (MariaDB).
   db:
-    # Utiliza una imagen preconstruida de MariaDB.
-    image: mariadb:11
+    # Construye la imagen usando el Dockerfile que se encuentra en la carpeta './database'.
+    build:
+      context: ./database
     # Agregamos un nombre
     container_name: sise-lite-db
     # Define variables de entorno para la configuración de la base de datos.
