@@ -36,7 +36,7 @@ exports.createUsuario = async (req, res) => {
       [idPersona, usuario, contrasena, correo_electronico]
     );
     await conn.commit();
-    res.json({ mensaje: 'Usuario y persona creados correctamente', idPersona });
+    res.json({ mensaje: 'Usuario y persona creados correctamente', idPersona: Number(idPersona) });
   } catch (err) {
     console.error('Error al insertar datos:', err);
     res.status(500).json({ error: 'Error al insertar usuario' });
