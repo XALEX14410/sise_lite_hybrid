@@ -1,10 +1,10 @@
 const pool = require('../db/pool');
 
-exports.getEstados = async (req, res) => {
+exports.getUsario = async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-    const rows = await conn.query(`SELECT * FROM dbo_estados`);
+    const rows = await conn.query(`SELECT * FROM dbo_usuario`);
     res.json(rows);
   } catch (err) {
     console.error('Error al obtener estados:', err);
@@ -14,22 +14,31 @@ exports.getEstados = async (req, res) => {
   }
 };
 
-exports.createEstados = async (req, res) => {
-  const { nombre_estado } = req.body;
-  if (!nombre_estado) {
-    return res.status(400).json({ error: 'Falta nombre_estado' });
+exports.createUsuario = async (req, res) => {
+  console.log('Datos recibidos:', req.body);
+  const { nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio, usuario, contrasena, correo_electronico } = req.body;
+  if (!nombre || !apellido_paterno || !apellido_materno || !fecha_de_nacimiento || !sexo || !curp || !idEstado || !idMunicipio || !usuario || !contrasena || !correo_electronico) {
+    return res.status(400).json({ error: 'Faltan datos' });
   }
 
   let conn;
   try {
     conn = await pool.getConnection();
+    await conn.beginTransaction();
+
     const result = await conn.query(
-      `INSERT INTO dbo_estado (nombre_estado) VALUES (?)`,
-      [nombre_estado]
+      `INSERT INTO dbo_persona (nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio) VALUES (?,?,?,?,?,?,?,?)`,
+      [nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio]
     );
-    res.json({ nombre_estado });
+    const idPersona = result.insertId;
+    await conn.query(
+      'INSERT INTO dbo_usuario (idPersona, usuario, contrasena, correo_electronico) VALUES (?, ?, ?, ?)',
+      [idPersona, usuario, contrasena, correo_electronico]
+    );
+    await conn.commit();
+    res.json({ mensaje: 'Usuario y persona creados correctamente', idPersona });
   } catch (err) {
-    console.error('Error al insertar estado:', err);
+    console.error('Error al insertar datos:', err);
     res.status(500).json({ error: 'Error al insertar usuario' });
   } finally {
     if (conn) conn.release();
