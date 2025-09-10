@@ -50,10 +50,10 @@ exports.createUsuario = async (req, res) => {
 
 exports.updateUsuario = async (req, res) => {
   const { id } = req.params;
-  const { usuario, contrasena, correo_electronico } = req.body;
+  const { correo_electronico } = req.body;
 
-  if (!usuario && !contrasena && !correo_electronico) {
-    return res.status(400).json({ error: 'Al menos uno de los campos debe tener información' });
+  if (!correo_electronico) {
+    return res.status(400).json({ error: 'Falta información' });
   }
   let conn;
   try {
@@ -62,15 +62,6 @@ exports.updateUsuario = async (req, res) => {
     const campos = [];
     const valores = [];
 
-    if (usuario) {
-      campos.push('usuario = ?');
-      valores.push(usuario);
-    }
-
-  if (contrasena) {
-      campos.push('contrasena = ?');
-      valores.push(contrasena);
-    }
     if (correo_electronico) {
       campos.push('correo_electronico = ?');
       valores.push(correo_electronico);
