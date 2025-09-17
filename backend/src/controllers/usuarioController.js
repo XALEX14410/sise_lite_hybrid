@@ -19,9 +19,19 @@ exports.getUsuario = async (req, res) => {
 
 exports.createUsuario = async (req, res) => {
   console.log('Datos recibidos:', req.body);
-  const { nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio, usuario, contrasena, correo_electronico } = req.body;
-  if (!nombre || !apellido_paterno || !apellido_materno || !fecha_de_nacimiento || !sexo || !curp || !idEstado || !idMunicipio || !usuario || !contrasena || !correo_electronico) {
-    return res.status(400).json({ error: 'Faltan datos' });
+
+  const {
+    nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
+    sexo, curp, idEstado, idMunicipio,
+    usuario, contrasena, correo_electronico, idPerfil,
+    idCarrera, matricula, semestre_actual
+    } = req.body;
+
+  // Validación general
+  if (!nombre || !apellido_paterno || !apellido_materno || !fecha_de_nacimiento ||
+      !sexo || !curp || !idEstado || !idMunicipio ||
+      !usuario || !contrasena || !correo_electronico || !idPerfil) {
+    return res.status(400).json({ error: 'Faltan datos obligatorios' });
   }
 
   let conn;
@@ -29,20 +39,70 @@ exports.createUsuario = async (req, res) => {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    const result = await conn.query(
-      `INSERT INTO dbo_persona (nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio) VALUES (?,?,?,?,?,?,?,?)`,
+    // Insertar en dbo_persona
+    const personaResult = await conn.query(
+      `INSERT INTO dbo_persona (nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio]
     );
-    const idPersona = result.insertId;
-    await conn.query(
-      'INSERT INTO dbo_usuario (idPersona, usuario, contrasena, correo_electronico) VALUES (?, ?, ?, ?)',
+    const idPersona = personaResult.insertId;
+
+    // Insertar en dbo_usuario
+    const usuarioResult = await conn.query(
+      `INSERT INTO dbo_usuario (idPersona, usuario, contrasena, correo_electronico)
+       VALUES (?, ?, ?, ?)`,
       [idPersona, usuario, contrasena, correo_electronico]
     );
+    const idUsuario = usuarioResult.insertId;
+
+    // Insertar en dbo_usuario_perfil
+    await conn.query(
+      `INSERT INTO dbo_usuario_perfil (idUsuario, idPerfil)
+       VALUES (?, ?)`,
+      [idUsuario, idPerfil]
+    );
+
+    // Obtener nombre del perfil
+    const perfilResult = await conn.query(
+      `SELECT nombre FROM dbo_login_perfil WHERE idPerfil = ?`,
+      [idPerfil]
+    );
+    const nombrePerfil = perfilResult[0]?.nombre;
+
+    // Insertar en dbo_docente si el perfil es Docente
+    if (nombrePerfil === 'Docente') {
+      await conn.query(
+        `INSERT INTO dbo_docente (idUsuario)
+         VALUES (?)`,
+        [idUsuario]
+      );
+    }
+
+    // Insertar en dbo_alumno si el perfil es Estudiante
+    if (nombrePerfil === 'Estudiante') {
+      if (!idCarrera || !matricula || !semestre_actual) {
+        throw new Error('Faltan datos para registrar al estudiante (idCarrera, matrícula, semestre)');
+      }
+
+      await conn.query(
+        `INSERT INTO dbo_alumno (idUsuario, idCarrera, matricula, semestre_actual)
+        VALUES (?, ?, ?, ?)`,
+        [idUsuario, idCarrera, matricula, semestre_actual]
+      );
+    }
+
     await conn.commit();
-    res.json({ mensaje: 'Usuario y persona creados correctamente', idPersona: Number(idPersona) });
+    res.json({
+      mensaje: 'Usuario creado correctamente',
+      idPersona: Number(idPersona),
+      idUsuario: Number(idUsuario),
+      perfil: nombrePerfil
+    });
+
   } catch (err) {
-    console.error('Error al insertar datos:', err);
-    res.status(500).json({ error: 'Error al insertar usuario' });
+    if (conn) await conn.rollback();
+    console.error('Error al insertar usuario:', err);
+    res.status(500).json({ error: 'Error al insertar usuario', detalle: err.message });
   } finally {
     if (conn) conn.release();
   }
