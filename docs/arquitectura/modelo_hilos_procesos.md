@@ -60,6 +60,7 @@
 
 ---
 
+
 ## 4. Flujo end-to-end propuesto
 
 ```mermaid
