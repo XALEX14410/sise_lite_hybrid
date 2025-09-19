@@ -1,12 +1,12 @@
 CREATE TABLE dbo_usuario (idUsuario int(10) NOT NULL AUTO_INCREMENT, idPersona int(10) NOT NULL, nuevoUsuario int(10) comment 'Función para saber si se activa un tutorial de nuevo usuario
 1 = Nuevo usuario
-0 = El usuario ya hizo login', Usuario int(10), Contraseña int(10), correo_electronico varchar(255), fecha_de_creacion time, fecha_de_modificacion time, status int(10), ultimo_login date, idGrupo int(10) NOT NULL, PRIMARY KEY (idUsuario));
+0 = El usuario ya hizo login', Usuario int(10), Contraseña int(10), correo_electronico varchar(255), fecha_de_creacion time, fecha_de_modificacion time, status int(10), ultimo_login date, idGrupo int(10) NULL, PRIMARY KEY (idUsuario));
 CREATE TABLE dbo_persona (idPersona int(10) NOT NULL AUTO_INCREMENT, nombre varchar(20), apellido_paterno varchar(20), apellido_materno varchar(20), fecha_de_nacimiento date, sexo char(255), curp varchar(18), idEstado int(10) NOT NULL, idMunicipio int(10) NOT NULL, PRIMARY KEY (idPersona));
 CREATE TABLE dbo_login_perfil (idPerfil int(10) NOT NULL AUTO_INCREMENT, nombre varchar(255), descripcion varchar(255), PRIMARY KEY (idPerfil));
 CREATE TABLE dbo_plantel (idPlantel int(10) NOT NULL AUTO_INCREMENT, idMunicipio int(10) NOT NULL, idEstado int(10) NOT NULL, nombre_plantel varchar(100), PRIMARY KEY (idPlantel));
 CREATE TABLE dbo_carga_academica (idCargaAcademica int(10) NOT NULL AUTO_INCREMENT, idMateria int(10) NOT NULL, SC int(10), `AS` int(10), EGC int(10), creditos tinyint, RC int(10), Grupo varchar(255), PRIMARY KEY (idCargaAcademica)) comment='SC: Sobrecarga     AS: Asesoría     RC: Repite Curso     EGC: Examen General De Conocimientos     COR: Plantel Córdoba     ORI: Plantel Orizaba     ';
 CREATE TABLE dbo_horario (idHorario int(10) NOT NULL AUTO_INCREMENT, dia_semana varchar(10), hora time, aula varchar(255), idGrupo int(10) NOT NULL, PRIMARY KEY (idHorario));
-CREATE TABLE dbo_carrera (idCarrera int(10) NOT NULL AUTO_INCREMENT, carrera varchar(20), duracion_semestres tinyint, descripcion varchar(255), idPlantel int(10) NOT NULL, `Column` int(10), PRIMARY KEY (idCarrera));
+CREATE TABLE dbo_carrera (idCarrera int(10) NOT NULL AUTO_INCREMENT, carrera varchar(50), duracion_semestres tinyint, descripcion varchar(255), idPlantel int(10) NOT NULL, `Column` int(10), PRIMARY KEY (idCarrera));
 CREATE TABLE dbo_menu_valido (id_menu int(10) NOT NULL AUTO_INCREMENT, nombre varchar(255), tipo int(10) comment 'enum(''gestor'', ''formulario'', ''otro'', ''observar'')', fecha_creacion time comment 'Fecha y hora de creación del registro del menú.', fecha_actualizacion time comment 'Fecha y hora de la última actualización del registro del menú.', acceso varchar(20) comment 'Ejemplo de uso
  [1,2] superadmin, admin
 
