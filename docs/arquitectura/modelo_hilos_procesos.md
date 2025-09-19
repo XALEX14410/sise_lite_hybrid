@@ -75,18 +75,17 @@ flowchart LR
     subgraph WorkerHTTP["Worker HTTP (Express + pool MariaDB)"]
       D[Petición entrante]
       D --> E{¿Tarea CPU intensiva?}
-      E -- No --> F[Ejecutar controlador async/await<br/>(consultas vía pool)]
-      E -- Sí --> G[Publicar tarea en cola<br/>+ invocar worker thread]
+      E -- No --> F[Ejecutar controlador async/await (pool)]
+      E -- Sí --> G[Publicar tarea en cola e invocar worker thread]
     end
 
     subgraph TareasAsincronas["Worker thread / Job queue"]
       G --> H[Procesar en worker thread]
-      H --> I[Devolver resultado<br/>por mensajes]
+      H --> I[Devolver resultado por mensajes]
     end
 
     F --> J[Responder HTTP]
     I --> J
- --> J
 ```
 
 > **Nota:** Para visualizar el diagrama, asegúrate de que tu visor de Markdown soporte [Mermaid](https://mermaid-js.github.io/mermaid/#/) (por ejemplo, VS Code con la extensión adecuada, GitHub, o herramientas compatibles).
