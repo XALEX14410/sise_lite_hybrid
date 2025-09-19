@@ -66,25 +66,25 @@
 
 ```mermaid
 flowchart LR
-    subgraph Master["Proceso maestro (cluster/PM2)"]
-      A[Arranque del orquestador]
-      A --> B{¿Worker saludable?}
-      B -- No --> C[Reemplazar worker]
+    subgraph Master["Coordinador (cluster/PM2)"]
+      A[Inicio del coordinador]
+      A --> B{¿Worker activo?}
+      B -- No --> C[Reiniciar worker]
     end
 
     subgraph WorkerHTTP["Worker HTTP (Express + pool MariaDB)"]
-      D[Petición entrante]
-      D --> E{¿Tarea CPU intensiva?}
-      E -- No --> F[Ejecutar controlador async/await (pool)]
-      E -- Sí --> G[Publicar tarea en cola e invocar worker thread]
+      D[Petición HTTP recibida]
+      D --> E{¿Requiere procesamiento intensivo de CPU?}
+      E -- No --> F[Ejecutar controlador async/await (pool MariaDB)]
+      E -- Sí --> G[Enviar tarea a worker thread / cola]
     end
 
-    subgraph TareasAsincronas["Worker thread / Job queue"]
-      G --> H[Procesar en worker thread]
-      H --> I[Devolver resultado por mensajes]
+    subgraph TareasAsincronas["Worker thread / Cola de trabajos"]
+      G --> H[Procesar tarea en worker thread]
+      H --> I[Retornar resultado al worker HTTP]
     end
 
-    F --> J[Responder HTTP]
+    F --> J[Enviar respuesta HTTP]
     I --> J
 ```
 
