@@ -74,13 +74,13 @@ flowchart LR
     subgraph WorkerHTTP["Worker HTTP (Express + pool MariaDB)"]
       D[Petición entrante]
       D --> E{¿Tarea CPU intensiva?}
-      E -- No --> F[Ejecutar controlador async/await\n(consultas vía pool)]
-      E -- Sí --> G[Publicar tarea en cola\n+ invocar worker thread]
+      E -- No --> F[Ejecutar controlador async/await<br>(consultas vía pool)]
+      E -- Sí --> G[Publicar tarea en cola<br>+ invocar worker thread]
     end
 
     subgraph TareasAsincronas["Worker thread / Job queue"]
       G --> H[Procesar en worker thread]
-      H --> I[Devolver resultado\npor mensajes]
+      H --> I[Devolver resultado<br>por mensajes]
     end
 
     F --> J[Responder HTTP]
