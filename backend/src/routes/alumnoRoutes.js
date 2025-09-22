@@ -5,5 +5,5 @@ const verificarSesion = require('../middlewares/verificarSesion');
 const verificarPerfil = require('../middlewares/verificarPerfil');
 
 router.get('/:id/grupos', verificarSesion, alumnoController.getGruposDelAlumno);
-
+router.get('/:id', verificarSesion, alumnoController.getAlumnobyID);
 module.exports = router;

@@ -29,8 +29,19 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
+    let idEntidad = null;
+
+    if (user.perfil === 'Docente') {
+      const [docente] = await pool.query('SELECT idDocente FROM dbo_docente WHERE idUsuario = ?', [user.idUsuario]);
+      idEntidad = docente?.idDocente;
+    } else if (user.perfil === 'Alumno') {
+      const [alumno] = await pool.query('SELECT idAlumno FROM dbo_alumno WHERE idUsuario = ?', [user.idUsuario]);
+      idEntidad = alumno?.idAlumno;
+    }
+
     req.session.usuario = {
-      id: user.idUsuario,
+      idUsuario: user.idUsuario,
+      idEntidad,
       usuario: user.usuario,
       perfil: user.perfil
     };
@@ -56,22 +67,52 @@ exports.logout = (req, res) => {
     if (err) {
       return res.status(500).json({ error: 'Error al cerrar sesión' });
     }
-    res.clearCookie('connect.sid'); // nombre por defecto de la cookie
+    res.clearCookie('connect.sid');
     res.json({ mensaje: 'Sesión cerrada correctamente' });
   });
 };
 
-exports.getPerfil = (req, res) => {
-  const usuario = req.session.usuario;
+exports.getPerfil = async (req, res) => {
+  const usuarioSesion = req.session.usuario;
 
-  if (!usuario) {
+  if (!usuarioSesion) {
     return res.status(401).json({ error: 'No hay sesión activa' });
   }
 
-  res.json({
-    mensaje: 'Sesión activa',
-    usuario
-  });
+  try {
+    const resultados = await pool.query(
+      `SELECT 
+         u.idUsuario,
+         u.usuario,
+         p.nombre,
+         p.apellido_paterno,
+         p.apellido_materno
+       FROM dbo_usuario u
+       INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+       WHERE u.idUsuario = ?`,
+      [usuarioSesion.idUsuario]
+    );
+
+    if (resultados.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const perfil = resultados[0];
+
+    res.json({
+      mensaje: 'Sesión activa',
+      usuario: {
+        idUsuario: perfil.idUsuario,
+        usuario: perfil.usuario,
+        nombre: perfil.nombre,
+        apellidoPaterno: perfil.apellido_paterno,
+        apellidoMaterno: perfil.apellido_materno
+      }
+    });
+  } catch (error) {
+    console.error('Error en getPerfil:', error);
+    res.status(500).json({ error: 'Error al obtener el perfil' });
+  }
 };
 
 exports.getRoles = async (req, res) => {

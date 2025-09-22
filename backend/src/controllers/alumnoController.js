@@ -20,3 +20,25 @@ exports.getGruposDelAlumno = async (req, res) => {
     res.status(500).json({ error: 'Error al consultar grupos', detalle: err.message });
   }
 };
+
+exports.getAlumnobyID = async (req, res) => {
+  const idAlumno = req.params.id;
+  try {
+    const rows = await pool.query(`
+      SELECT a.idAlumno, u.usuario, u.correo_electronico
+      FROM dbo_alumno a
+      INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
+      WHERE a.idAlumno = ?
+    `, [idAlumno]);
+    res.json({ alumnos: rows });
+
+  if (rows.length === 0) {
+      return res.status(404).json({ error: 'Alumno no encontrado' });
+    }
+
+    res.json({ docentes: rows[0] });
+  } catch (err) {
+    console.error('Error al obtener Alumno:', err);
+    res.status(500).json({ error: 'Error al consultar Alumno', detalle: err.message });
+  }
+};

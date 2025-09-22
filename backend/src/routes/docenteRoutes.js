@@ -8,5 +8,5 @@ router.get('/', verificarPerfil(['Admin']), docenteController.getAllDocentes);
 router.get('/:id/grupos', verificarPerfil(['Admin', 'Docente']), docenteController.getGruposDelDocente);
 router.get('/:id/estudiantes', verificarSesion, docenteController.getEstudiantesDelDocente);
 router.get('/:id/resumen', verificarSesion, verificarPerfil(['Docente', 'Admin']), docenteController.getResumenDelDocente);
-
+router.get('/:id', verificarSesion, docenteController.getDocentebyID);
 module.exports = router;
