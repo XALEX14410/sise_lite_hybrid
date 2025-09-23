@@ -2540,8 +2540,7 @@ INSERT INTO `dbo_municipios` (`idMunicipio`, `municipio`, `idEstado`) VALUES
 -- Indices de la tabla `dbo_estados`
 --
 ALTER TABLE `dbo_estados`
-  ADD PRIMARY KEY (`idEstado`),
-  ADD KEY `dbo_estados_dbo_pais_FK` (`id_pais`);
+  ADD PRIMARY KEY (`idEstado`);
 
 --
 -- Indices de la tabla `dbo_municipios`
@@ -2573,10 +2572,6 @@ ALTER TABLE `dbo_municipios`
 --
 -- Filtros para la tabla `dbo_estados`
 --
-ALTER TABLE `dbo_estados`
-  ADD CONSTRAINT `dbo_estados_dbo_pais_FK` FOREIGN KEY (`id_pais`) REFERENCES `dbo_pais` (`id_pais`);
+ALTER TABLE `dbo_municipios`
+  ADD CONSTRAINT `idEstado` FOREIGN KEY (`idEstado`) REFERENCES `dbo_estados` (`idEstado`);
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -5,8 +5,9 @@ version: "3.9"
 services:
   # Servicio de la base de datos (MariaDB).
   db:
-    # Utiliza una imagen preconstruida de MariaDB.
-    image: mariadb:11
+    # Construye la imagen usando el Dockerfile que se encuentra en la carpeta './database'.
+    build:
+      context: ./database
     # Agregamos un nombre
     container_name: sise-lite-db
     # Define variables de entorno para la configuración de la base de datos.
@@ -24,9 +25,9 @@ services:
   
   # Servicio para el backend (API de Node.js).
   api:
-    # Construye la imagen usando el Dockerfile que se encuentra en la carpeta './backend'.
     build:
       context: ./backend
+<<<<<<< HEAD
     # Define variables de entorno para que el backend se conecte a la base de datos.
     environment:
       DB_HOST: db      # Usa el nombre del servicio 'db' para la conexión.
@@ -35,9 +36,12 @@ services:
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       API_PORT: 9000
+=======
+    env_file:
+      - ./backend/.env
+>>>>>>> ac7198d89d9fbe6fa2509f6356b66dea52a72ef2
     ports:
-      - "9000:9000"  # Cambiado a 9000 para que coincida con el puerto de backend
-    # Asegura que la base de datos se inicie antes que la API.
+      - "4000:4000"
     depends_on:
       - db
 
@@ -48,7 +52,7 @@ services:
       context: ./frontend
     # Define variables de entorno para que el frontend se conecte al backend.
     environment:
-      NEXT_PUBLIC_API_URL: http://api:9000  # Usa el nombre del servicio 'api' para la conexión.
+      NEXT_PUBLIC_API_URL: http://api:4000  # Usa el nombre del servicio 'api' para la conexión.
     # Mapea el puerto del contenedor (3000) al puerto de tu máquina (3000).
     ports:
       - "3000:3000"
