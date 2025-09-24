@@ -7,9 +7,13 @@ const session = require('express-session');
 require('dotenv').config();
 const app = express();
 
+app.use(cors({
+  origin: 'http://172.16.2.31:3000', // la dirección de tu front
+  credentials: true               // permite cookies
+}));
+
 const usuarioRoutes = require('./src/routes/usuarioRoutes');
 const loginRoutes = require('./src/routes/loginRoutes');
-const protegidasRoutes = require('./src/routes/protegidasRoutes');
 const carreraRoutes = require('./src/routes/carreraRoutes');
 const materiaRoutes = require('./src/routes/materiaRoutes');
 const inscripcionRoutes = require('./src/routes/inscripcionRoutes');
@@ -17,28 +21,37 @@ const grupoRoutes = require('./src/routes/grupoRoutes');
 const horarioRoutes = require('./src/routes/horarioRoutes');
 const alumnoRoutes = require('./src/routes/alumnoRoutes');
 const docenteRoutes = require('./src/routes/docenteRoutes');
+const municipiosRoutes = require('./src/routes/municipiosRoutes');
+const estadosRoutes = require('./src/routes/estadosRoutes');
+const inicioRouter = require('./src/routes/inicioRoutes');
 
 app.use(session({
-  secret: 'clave_super_secreta',
+  secret: process.env.SESSION_SECRET || 'tu-secreto',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } 
+  cookie: {
+    httpOnly: true,
+    secure: false, 
+    sameSite: 'lax' 
+  }
 }));
 
 app.use(express.json());
+app.use(express.static('public'));
 app.use(morgan('combined'));
-app.use(cors());
 
 app.use('/usuario', usuarioRoutes);
-app.use('/', loginRoutes);
-app.use('/inicio', protegidasRoutes);
+app.use('/auth', loginRoutes);
 app.use('/carrera', carreraRoutes);
 app.use('/materia', materiaRoutes);
-app.use('/inscripcion', inscripcionRoutes);
+app.use('/inscripcione', inscripcionRoutes);
 app.use('/grupo', grupoRoutes);
 app.use('/horario', horarioRoutes);
 app.use('/docente', docenteRoutes);
 app.use('/alumno', alumnoRoutes);
+app.use('/municipios', municipiosRoutes);
+app.use('/estados', estadosRoutes);
+app.use('/inicio', inicioRouter);
 
 app.get('/api/status', (req, res) => {
   res.json({ message: 'Backend funcionando' });

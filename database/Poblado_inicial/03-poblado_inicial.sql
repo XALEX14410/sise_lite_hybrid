@@ -11,7 +11,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- 1. Población de tablas sin dependencias (o con dependencias externas)
 -- -----------------------------------------------------------------
 
--- NOTA: Tablas dbo_estados y dbo_municipios ya existen y están pobladas.
+-- NOTA: Asumo que las tablas dbo_estados y dbo_municipios ya existen y están pobladas.
 -- Si no, es necesario crearlas e insertar datos básicos.
 
 -- Datos para dbo_login_perfil (Perfiles de acceso)

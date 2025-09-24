@@ -83,3 +83,25 @@ exports.getResumenDelDocente = async (req, res) => {
     res.status(500).json({ error: 'Error al consultar resumen', detalle: err.message });
   }
 };
+
+exports.getDocentebyID = async (req, res) => {
+  const idDocente = req.params.id;
+  try {
+    const rows = await pool.query(`
+      SELECT d.idDocente, u.usuario, u.correo_electronico
+      FROM dbo_docente d
+      INNER JOIN dbo_usuario u ON d.idUsuario = u.idUsuario
+      WHERE d.idDocente = ?
+    `, [idDocente]);
+    res.json({ docentes: rows });
+
+  if (rows.length === 0) {
+      return res.status(404).json({ error: 'Maestro no encontrado' });
+    }
+
+    res.json({ docentes: rows[0] });
+  } catch (err) {
+    console.error('Error al obtener Maestro:', err);
+    res.status(500).json({ error: 'Error al consultar Maestro', detalle: err.message });
+  }
+};
