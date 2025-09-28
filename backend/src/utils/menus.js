@@ -1,5 +1,5 @@
 module.exports = {
-  Alumno: [
+  Estudiante: [
   { nombre: 'Mis grupos', ruta: '/alumno/:id/grupos' },
   { nombre: 'Mi horario', ruta: '/alumno/:id/horario' },
   { nombre: 'Mis materias', ruta: '/alumno/:id/materias' },

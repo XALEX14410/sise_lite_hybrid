@@ -8,8 +8,8 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({
-  origin: 'http://172.16.2.31:3000', // la dirección de tu front
-  credentials: true               // permite cookies
+  origin: true, // tu frontend
+  credentials: true
 }));
 
 const usuarioRoutes = require('./src/routes/usuarioRoutes');
@@ -25,6 +25,10 @@ const municipiosRoutes = require('./src/routes/municipiosRoutes');
 const estadosRoutes = require('./src/routes/estadosRoutes');
 const inicioRouter = require('./src/routes/inicioRoutes');
 
+app.use(express.json());
+app.use(express.static('public'));
+app.use(morgan('combined'));
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'tu-secreto',
   resave: false,
@@ -35,10 +39,6 @@ app.use(session({
     sameSite: 'lax' 
   }
 }));
-
-app.use(express.json());
-app.use(express.static('public'));
-app.use(morgan('combined'));
 
 app.use('/usuario', usuarioRoutes);
 app.use('/auth', loginRoutes);

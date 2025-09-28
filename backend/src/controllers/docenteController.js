@@ -105,3 +105,22 @@ exports.getDocentebyID = async (req, res) => {
     res.status(500).json({ error: 'Error al consultar Maestro', detalle: err.message });
   }
 };
+
+exports.getHorarioPorDocente = async (req, res) => {
+  const idDocente = req.params.id;
+
+  try {
+    const rows = await pool.query(
+      `SELECT h.*
+       FROM dbo_horario h
+       JOIN dbo_grupo g ON h.idGrupo = g.idGrupo
+       WHERE g.idDocente = ?`,
+      [idDocente]
+    );
+
+    res.json({ horario: rows });
+  } catch (error) {
+    console.error('Error al obtener horario del docente:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};

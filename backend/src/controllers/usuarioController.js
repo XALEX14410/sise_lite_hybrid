@@ -1,6 +1,6 @@
 const pool = require('../db/pool');
 
-exports.getUsuario = async (req, res) => {
+exports.getUsuariobyID = async (req, res) => {
   const idUsuario = req.params.id;
   try {
     if (!idUsuario || isNaN(Number(idUsuario)) || Number(idUsuario) <= 0) {

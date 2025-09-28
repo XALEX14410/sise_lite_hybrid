@@ -11,7 +11,7 @@ exports.login = async (req, res) => {
   }
 
   try {
-    const [rows] = await pool.query(
+    const rows = await pool.query(
       `SELECT u.idUsuario, u.usuario, u.contrasena, lp.nombre AS perfil
        FROM dbo_usuario u
        LEFT JOIN dbo_usuario_perfil up ON u.idUsuario = up.idUsuario
@@ -22,8 +22,7 @@ exports.login = async (req, res) => {
 
     console.log('Resultado SQL:', rows);
 
-    const user = rows;
-
+    const user = rows[0]; 
     if (!user) {
       console.log('Credenciales inválidas');
       return res.status(401).json({ error: 'Credenciales inválidas' });
@@ -32,11 +31,11 @@ exports.login = async (req, res) => {
     let idEntidad = null;
 
     if (user.perfil === 'Docente') {
-      const [docente] = await pool.query('SELECT idDocente FROM dbo_docente WHERE idUsuario = ?', [user.idUsuario]);
-      idEntidad = docente?.idDocente;
-    } else if (user.perfil === 'Alumno') {
-      const [alumno] = await pool.query('SELECT idAlumno FROM dbo_alumno WHERE idUsuario = ?', [user.idUsuario]);
-      idEntidad = alumno?.idAlumno;
+      const docenteRows = await pool.query('SELECT idDocente FROM dbo_docente WHERE idUsuario = ?', [user.idUsuario]);
+      idEntidad = docenteRows[0]?.idDocente;
+    } else if (user.perfil === 'Estudiante') {
+      const alumnoRows = await pool.query('SELECT idAlumno FROM dbo_alumno WHERE idUsuario = ?', [user.idUsuario]);
+      idEntidad = alumnoRows[0]?.idAlumno;
     }
 
     req.session.usuario = {
