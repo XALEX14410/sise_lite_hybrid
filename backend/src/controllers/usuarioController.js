@@ -18,21 +18,12 @@ exports.getUsuariobyID = async (req, res) => {
 };
 
 exports.createUsuario = async (req, res) => {
-  console.log('Datos recibidos:', req.body);
-
   const {
     nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
     sexo, curp, idEstado, idMunicipio,
     usuario, contrasena, correo_electronico, idPerfil,
     idCarrera, matricula, semestre_actual
     } = req.body;
-
-  // Validación general
-  if (!nombre || !apellido_paterno || !apellido_materno || !fecha_de_nacimiento ||
-      !sexo || !curp || !idEstado || !idMunicipio ||
-      !usuario || !contrasena || !correo_electronico || !idPerfil) {
-    return res.status(400).json({ error: 'Faltan datos obligatorios' });
-  }
 
   let conn;
   try {
@@ -80,10 +71,6 @@ exports.createUsuario = async (req, res) => {
 
     // Insertar en dbo_alumno si el perfil es Estudiante
     if (nombrePerfil === 'alumno') {
-      if (!idCarrera || !matricula || !semestre_actual) {
-        throw new Error('Faltan datos para registrar al estudiante (idCarrera, matrícula, semestre)');
-      }
-
       await conn.query(
         `INSERT INTO dbo_alumno (idUsuario, idCarrera, matricula, semestre_actual)
         VALUES (?, ?, ?, ?)`,

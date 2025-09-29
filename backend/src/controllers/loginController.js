@@ -3,13 +3,6 @@ const pool = require('../db/pool');
 exports.login = async (req, res) => {
   const { usuario, contrasena } = req.body;
 
-  console.log('Datos recibidos:', { usuario, contrasena });
-
-  if (!usuario || !contrasena) {
-    console.log('Faltan credenciales');
-    return res.status(400).json({ error: 'Faltan credenciales' });
-  }
-
   try {
     const rows = await pool.query(
       `SELECT u.idUsuario, u.usuario, u.contrasena, lp.nombre AS perfil
@@ -20,11 +13,8 @@ exports.login = async (req, res) => {
       [usuario, contrasena]
     );
 
-    console.log('Resultado SQL:', rows);
-
     const user = rows[0]; 
     if (!user) {
-      console.log('Credenciales inválidas');
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
@@ -44,8 +34,6 @@ exports.login = async (req, res) => {
       usuario: user.usuario,
       perfil: user.perfil
     };
-
-    console.log('Usuario autenticado:', user);
 
     res.json({
       mensaje: 'Login exitoso',
