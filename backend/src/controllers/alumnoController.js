@@ -23,6 +23,8 @@ exports.getGruposDelAlumno = async (req, res) => {
   }
 };
 
+//MOSTRAR UN ALUMNO ESPECIFICO POR ID (SUPERADMIN)
+
 exports.getAlumnobyID = async (req, res) => {
   const idAlumno = req.params.id;
   try {
@@ -84,5 +86,22 @@ exports.getMateriaPorEstudiante = async (req, res) => {
   } catch (error) {
     console.error('Error al obtener materias del alumno:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+//MOSTRAR TODOS LOS ALUMNOS QUE HAY EN EL SISTEMA (ADMIN/SUPERADMIN)
+
+exports.getAllAlumnos = async (removeEventListener, res) => {
+  try {
+    const alumnos = await pool.query(`
+      SELECT a.idAlumno, u.usuario, u.correo_electronico
+      FROM dbo_alumno a
+      INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
+      WHERE a.idAlumno = ?
+    `);
+    res.json({ alumnos });
+  } catch (err) {
+    console.error('Error al obtener alumnos:', err);
+    res.status(500).json({ error: 'Error al consultar alumnos', detalle: err.message });
   }
 };

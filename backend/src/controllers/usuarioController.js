@@ -17,6 +17,18 @@ exports.getUsuariobyID = async (req, res) => {
   } 
 };
 
+exports.getAllUsuarios = async (req, res) => {
+  try {
+    const usuarios = await pool.query(`
+      SELECT * from dbo_usuario
+    `);
+    res.json({usuarios});
+  } catch (error) {
+    console.error("Error al obtener usuarios:", error);
+    return res.status(500).json({error: 'Error al obtener usuarios'});
+  }
+}
+
 exports.createUsuario = async (req, res) => {
   const {
     nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
