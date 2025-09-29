@@ -5,6 +5,6 @@ const verificarPerfil = require('../middlewares/verificarPerfil');
 
 router.post('/login', loginController.login);
 router.post('/logout', loginController.logout);
-router.get('/roles', verificarPerfil(['Admin']), loginController.getRoles);
+router.get('/roles', verificarPerfil(['superadmin']), loginController.getRoles);
 router.get('/perfil', loginController.getPerfil);
 module.exports = router;

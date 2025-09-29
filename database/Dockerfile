@@ -6,3 +6,9 @@ COPY ./Entidades_federativas/01-Entidades_federativas.sql /docker-entrypoint-ini
 
 # Copiar el SQL al directorio de inicialización de MariaDB
 COPY ./Sistema/02-sisesqlhybrid.sql /docker-entrypoint-initdb.d/
+
+# Copiar el SQL de perfiles del usuario
+COPY ./Roles/03-perfiles.sql /docker-entrypoint-initdb.d/
+
+# Copiar el SQL de un superadmin ya establecido
+COPY ./Superadmin/04-superadmin.sql /docker-entrypoint-initdb.d/

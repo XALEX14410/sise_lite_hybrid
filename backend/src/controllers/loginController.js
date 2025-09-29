@@ -30,10 +30,10 @@ exports.login = async (req, res) => {
 
     let idEntidad = null;
 
-    if (user.perfil === 'Docente') {
+    if (user.perfil === 'docente') {
       const docenteRows = await pool.query('SELECT idDocente FROM dbo_docente WHERE idUsuario = ?', [user.idUsuario]);
       idEntidad = docenteRows[0]?.idDocente;
-    } else if (user.perfil === 'Estudiante') {
+    } else if (user.perfil === 'alumno') {
       const alumnoRows = await pool.query('SELECT idAlumno FROM dbo_alumno WHERE idUsuario = ?', [user.idUsuario]);
       idEntidad = alumnoRows[0]?.idAlumno;
     }

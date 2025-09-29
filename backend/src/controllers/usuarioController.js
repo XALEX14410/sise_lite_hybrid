@@ -70,7 +70,7 @@ exports.createUsuario = async (req, res) => {
     const nombrePerfil = perfilResult[0]?.nombre;
 
     // Insertar en dbo_docente si el perfil es Docente
-    if (nombrePerfil === 'Docente') {
+    if (nombrePerfil === 'docente') {
       await conn.query(
         `INSERT INTO dbo_docente (idUsuario)
          VALUES (?)`,
@@ -79,7 +79,7 @@ exports.createUsuario = async (req, res) => {
     }
 
     // Insertar en dbo_alumno si el perfil es Estudiante
-    if (nombrePerfil === 'Estudiante') {
+    if (nombrePerfil === 'alumno') {
       if (!idCarrera || !matricula || !semestre_actual) {
         throw new Error('Faltan datos para registrar al estudiante (idCarrera, matrícula, semestre)');
       }
