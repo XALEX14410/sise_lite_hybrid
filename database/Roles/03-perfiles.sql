@@ -1,4 +1,4 @@
--- 03-perfiles.sql
+-- 03-perfiles.sql Los perfiles de superadmin, admin, docente y alumno ya predeterminados
 
 INSERT INTO dbo_login_perfil (nombre, descripcion)
 VALUES
