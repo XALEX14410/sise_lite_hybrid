@@ -1,5 +1,6 @@
 const pool = require('../db/pool');
 
+//Ya tiene validaciones /authvalidator
 exports.login = async (req, res) => {
   const { usuario, contrasena } = req.body;
 
