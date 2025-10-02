@@ -31,6 +31,7 @@ app.use(morgan('combined'));
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'tu-secreto',
+  secret: process.env.SESSION_SECRET || 'tu-secreto',
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -42,13 +43,18 @@ app.use(session({
 
 app.use('/usuario', usuarioRoutes);
 app.use('/auth', loginRoutes);
+app.use('/auth', loginRoutes);
 app.use('/carrera', carreraRoutes);
 app.use('/materia', materiaRoutes);
+app.use('/inscripcione', inscripcionRoutes);
 app.use('/inscripcione', inscripcionRoutes);
 app.use('/grupo', grupoRoutes);
 app.use('/horario', horarioRoutes);
 app.use('/docente', docenteRoutes);
 app.use('/alumno', alumnoRoutes);
+app.use('/municipios', municipiosRoutes);
+app.use('/estados', estadosRoutes);
+app.use('/inicio', inicioRouter);
 app.use('/municipios', municipiosRoutes);
 app.use('/estados', estadosRoutes);
 app.use('/inicio', inicioRouter);

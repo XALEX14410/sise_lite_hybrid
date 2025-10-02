@@ -32,6 +32,8 @@ exports.login = async (req, res) => {
     req.session.usuario = {
       idUsuario: user.idUsuario,
       idEntidad,
+      idUsuario: user.idUsuario,
+      idEntidad,
       usuario: user.usuario,
       perfil: user.perfil
     };
@@ -55,6 +57,7 @@ exports.logout = (req, res) => {
     if (err) {
       return res.status(500).json({ error: 'Error al cerrar sesión' });
     }
+    res.clearCookie('connect.sid');
     res.clearCookie('connect.sid');
     res.json({ mensaje: 'Sesión cerrada correctamente' });
   });
@@ -87,6 +90,40 @@ exports.getPerfil = async (req, res) => {
 
     const perfil = resultados[0];
 
+  try {
+    const resultados = await pool.query(
+      `SELECT 
+         u.idUsuario,
+         u.usuario,
+         p.nombre,
+         p.apellido_paterno,
+         p.apellido_materno
+       FROM dbo_usuario u
+       INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+       WHERE u.idUsuario = ?`,
+      [usuarioSesion.idUsuario]
+    );
+
+    if (resultados.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const perfil = resultados[0];
+
+    res.json({
+      mensaje: 'Sesión activa',
+      usuario: {
+        idUsuario: perfil.idUsuario,
+        usuario: perfil.usuario,
+        nombre: perfil.nombre,
+        apellidoPaterno: perfil.apellido_paterno,
+        apellidoMaterno: perfil.apellido_materno
+      }
+    });
+  } catch (error) {
+    console.error('Error en getPerfil:', error);
+    res.status(500).json({ error: 'Error al obtener el perfil' });
+  }
     res.json({
       mensaje: 'Sesión activa',
       usuario: {
