@@ -6,9 +6,9 @@ const verificarPerfil = require('../middlewares/verificarPerfil');
 
 router.get('/', verificarSesion, grupoController.getAllGrupos);
 router.get('/:id', verificarSesion, grupoController.getGrupoById);
-router.post('/', verificarPerfil(['Admin']), grupoController.createGrupo);
-router.put('/:id', verificarPerfil(['Admin']), grupoController.updateGrupo);
-router.delete('/:id', verificarPerfil(['Admin']), grupoController.deleteGrupo);
+router.post('/', verificarPerfil(['admin']), grupoController.createGrupo);
+router.put('/:id', verificarPerfil(['admin']), grupoController.updateGrupo);
+router.delete('/:id', verificarPerfil(['admin']), grupoController.deleteGrupo);
 router.get('/:id/horario', verificarSesion, grupoController.getHorarioCompletoDelGrupo);
 
 module.exports = router;
