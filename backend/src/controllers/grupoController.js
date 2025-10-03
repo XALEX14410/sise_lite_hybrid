@@ -39,17 +39,17 @@ exports.getGrupoById = async (req, res) => {
 };
 
 exports.createGrupo = async (req, res) => {
-  const { clave_grupo, cupo, idMateria, idDocente } = req.body;
+  const { preido, clave_grupo, cupo, idMateria, idDocente } = req.body;
 
-  if (!clave_grupo || !cupo || !idMateria || !idDocente) {
+  if (!preido || !clave_grupo || !cupo || !idMateria || !idDocente) {
     return res.status(400).json({ error: 'Faltan datos del grupo' });
   }
 
   try {
     const result = await pool.query(`
-      INSERT INTO dbo_grupo (clave_grupo, cupo, idMateria, idDocente)
+      INSERT INTO dbo_grupo (preido, clave_grupo, cupo, idMateria, idDocente)
       VALUES (?, ?, ?, ?)
-    `, [clave_grupo, cupo, idMateria, idDocente]);
+    `, [preido, clave_grupo, cupo, idMateria, idDocente]);
 
     res.json({ mensaje: 'Grupo creado correctamente', idGrupo: Number(result.insertId) });
   } catch (err) {

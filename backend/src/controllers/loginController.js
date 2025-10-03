@@ -113,9 +113,9 @@ exports.getPerfil = async (req, res) => {
     res.json({
       mensaje: 'Sesión activa',
       usuario: {
-        idUsuario: perfil.idUsuario,
+        id: perfil.idUsuario,
         usuario: perfil.usuario,
-        nombre: perfil.nombre,
+        perfil: perfil.nombre,
         apellidoPaterno: perfil.apellido_paterno,
         apellidoMaterno: perfil.apellido_materno
       }
@@ -127,9 +127,9 @@ exports.getPerfil = async (req, res) => {
     res.json({
       mensaje: 'Sesión activa',
       usuario: {
-        idUsuario: perfil.idUsuario,
+        id: perfil.idUsuario,
         usuario: perfil.usuario,
-        nombre: perfil.nombre,
+        perfil: perfil.nombre,
         apellidoPaterno: perfil.apellido_paterno,
         apellidoMaterno: perfil.apellido_materno
       }
