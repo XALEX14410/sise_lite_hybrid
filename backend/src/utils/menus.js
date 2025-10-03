@@ -1,19 +1,19 @@
 module.exports = {
-  Alumno: [
+  alumno: [
   { nombre: 'Mis grupos', ruta: '/alumno/:id/grupos' },
   { nombre: 'Mi horario', ruta: '/alumno/:id/horario' },
   { nombre: 'Mis materias', ruta: '/alumno/:id/materias' },
   { nombre: 'Mis calificaciones', ruta: '/alumno/:id/calificaciones' },
   { nombre: 'Mi perfil', ruta: '/auth/perfil' }
   ],
-  Docente: [
+  docente: [
   { nombre: 'Mis grupos', ruta: '/docente/:id/grupos' },
   { nombre: 'Horario de clases', ruta: '/docente/:id/horario' },
   { nombre: 'Estudiantes por grupo', ruta: '/docente/:id/estudiantes' },
   { nombre: 'Registrar calificaciones', ruta: '/docente/:id/calificaciones' },
   { nombre: 'Mi perfil', ruta: '/auth/perfil' }
   ],
-  Admin: [
+  admin: [
   { nombre: 'Lista de alumnos', ruta: '/admin/alumnos' },
   { nombre: 'Lista de docentes', ruta: '/admin/docentes' },
   { nombre: 'Grupos', ruta: '/admin/grupos' },
@@ -23,7 +23,7 @@ module.exports = {
   { nombre: 'Horarios', ruta: '/admin/horarios' },
   { nombre: 'Mi perfil', ruta: '/auth/perfil' }
   ],
-  Superadmin: [
+  superadmin: [
   { nombre: 'Usuarios del sistema', ruta: '/superadmin/usuarios' },
   { nombre: 'Perfiles y roles', ruta: '/superadmin/perfiles' },
   { nombre: 'Asignaciones de perfil', ruta: '/superadmin/asignaciones' },
