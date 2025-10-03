@@ -14,6 +14,28 @@ exports.getAllDocentes = async (req, res) => {
   }
 };
 
+exports.getDocentebyID = async (req, res) => {
+  const idDocente = req.params.id;
+  try {
+    const rows = await pool.query(`
+      SELECT d.idDocente, u.usuario, u.correo_electronico
+      FROM dbo_docente d
+      INNER JOIN dbo_usuario u ON d.idUsuario = u.idUsuario
+      WHERE d.idDocente = ?
+    `, [idDocente]);
+    res.json({ docentes: rows });
+
+  if (rows.length === 0) {
+      return res.status(404).json({ error: 'Maestro no encontrado' });
+    }
+
+    res.json({ docentes: rows[0] });
+  } catch (err) {
+    console.error('Error al obtener Maestro:', err);
+    res.status(500).json({ error: 'Error al consultar Maestro', detalle: err.message });
+  }
+};
+
 exports.getGruposDelDocente = async (req, res) => {
   const idDocente = req.params.id;
   try {
@@ -84,24 +106,21 @@ exports.getResumenDelDocente = async (req, res) => {
   }
 };
 
-exports.getDocentebyID = async (req, res) => {
+exports.getHorarioPorDocente = async (req, res) => {
   const idDocente = req.params.id;
+
   try {
-    const rows = await pool.query(`
-      SELECT d.idDocente, u.usuario, u.correo_electronico
-      FROM dbo_docente d
-      INNER JOIN dbo_usuario u ON d.idUsuario = u.idUsuario
-      WHERE d.idDocente = ?
-    `, [idDocente]);
-    res.json({ docentes: rows });
+    const rows = await pool.query(
+      `SELECT h.*
+       FROM dbo_horario h
+       JOIN dbo_grupo g ON h.idGrupo = g.idGrupo
+       WHERE g.idDocente = ?`,
+      [idDocente]
+    );
 
-  if (rows.length === 0) {
-      return res.status(404).json({ error: 'Maestro no encontrado' });
-    }
-
-    res.json({ docentes: rows[0] });
-  } catch (err) {
-    console.error('Error al obtener Maestro:', err);
-    res.status(500).json({ error: 'Error al consultar Maestro', detalle: err.message });
+    res.json({ horario: rows });
+  } catch (error) {
+    console.error('Error al obtener horario del docente:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
