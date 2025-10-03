@@ -16,24 +16,13 @@ exports.obtenerInicio = async (req, res) => {
     }
     const persona = resultados[0];
     const nombreCompleto = `${persona.nombre} ${persona.apellido_paterno} ${persona.apellido_materno}`;
-    const menus = require('../utils/menus');
-    const menuBase = menus[usuario.perfil] || [];
-    const menu = menuBase.map(item => ({
-      nombre: item.nombre,
-      ruta: item.ruta.replace(':id', usuario.idEntidad)
-    }));
 
-    // Mostrar datos personales en un apartado separado
     const datosPersonales = {
       nombreCompleto: nombreCompleto,
-      // Agrega cualquier otro dato personal que desees mostrar
     };
 
     res.json({
-      mensaje: `¡Bienvenido, ${nombreCompleto}!`,
-      menu,
-      datosPersonales: datosPersonales,
-      imagenBienvenida: `/assets/${usuario.perfil.toLowerCase()}.jpg`
+      mensaje: `¡Bienvenido, ${nombreCompleto}!`
     });
   } catch (error) {
     console.error('Error en inicio:', error);
