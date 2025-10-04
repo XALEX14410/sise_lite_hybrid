@@ -90,53 +90,24 @@ exports.getPerfil = async (req, res) => {
 
     const perfil = resultados[0];
 
-  try {
-    const resultados = await pool.query(
-      `SELECT 
-         u.idUsuario,
-         u.usuario,
-         p.nombre,
-         p.apellido_paterno,
-         p.apellido_materno
-       FROM dbo_usuario u
-       INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
-       WHERE u.idUsuario = ?`,
-      [usuarioSesion.idUsuario]
-    );
-
-    if (resultados.length === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
+    // Verificar si los valores son de tipo correcto
+    if (!perfil || typeof perfil.idUsuario !== 'number') {
+      return res.status(500).json({ error: 'Error al obtener el perfil' });
     }
 
-    const perfil = resultados[0];
-
-    res.json({
+    return res.json({
       mensaje: 'Sesión activa',
       usuario: {
         id: perfil.idUsuario,
         usuario: perfil.usuario,
-        perfil: perfil.nombre,
+        nombre: perfil.nombre,
         apellidoPaterno: perfil.apellido_paterno,
         apellidoMaterno: perfil.apellido_materno
       }
     });
   } catch (error) {
     console.error('Error en getPerfil:', error);
-    res.status(500).json({ error: 'Error al obtener el perfil' });
-  }
-    res.json({
-      mensaje: 'Sesión activa',
-      usuario: {
-        id: perfil.idUsuario,
-        usuario: perfil.usuario,
-        perfil: perfil.nombre,
-        apellidoPaterno: perfil.apellido_paterno,
-        apellidoMaterno: perfil.apellido_materno
-      }
-    });
-  } catch (error) {
-    console.error('Error en getPerfil:', error);
-    res.status(500).json({ error: 'Error al obtener el perfil' });
+    return res.status(500).json({ error: 'Error al obtener el perfil' });
   }
 };
 
