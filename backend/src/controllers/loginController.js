@@ -63,54 +63,6 @@ exports.logout = (req, res) => {
   });
 };
 
-exports.getPerfil = async (req, res) => {
-  const usuarioSesion = req.session.usuario;
-
-  if (!usuarioSesion) {
-    return res.status(401).json({ error: 'No hay sesión activa' });
-  }
-
-  try {
-    const resultados = await pool.query(
-      `SELECT 
-         u.idUsuario,
-         u.usuario,
-         p.nombre,
-         p.apellido_paterno,
-         p.apellido_materno
-       FROM dbo_usuario u
-       INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
-       WHERE u.idUsuario = ?`,
-      [usuarioSesion.idUsuario]
-    );
-
-    if (resultados.length === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-
-    const perfil = resultados[0];
-
-    // Verificar si los valores son de tipo correcto
-    if (!perfil || typeof perfil.idUsuario !== 'number') {
-      return res.status(500).json({ error: 'Error al obtener el perfil' });
-    }
-
-    return res.json({
-      mensaje: 'Sesión activa',
-      usuario: {
-        id: perfil.idUsuario,
-        usuario: perfil.usuario,
-        nombre: perfil.nombre,
-        apellidoPaterno: perfil.apellido_paterno,
-        apellidoMaterno: perfil.apellido_materno
-      }
-    });
-  } catch (error) {
-    console.error('Error en getPerfil:', error);
-    return res.status(500).json({ error: 'Error al obtener el perfil' });
-  }
-};
-
 exports.getRoles = async (req, res) => {
   try {
     const rows = await pool.query('SELECT nombre FROM dbo_login_perfil');
@@ -119,5 +71,57 @@ exports.getRoles = async (req, res) => {
   } catch (err) {
     console.error('Error al obtener roles:', err);
     res.status(500).json({ error: 'Error al consultar roles', detalle: err.message });
+  }
+};
+
+exports.getDatosPersonales = async (req, res) => {
+  try {
+    const usuarioSesion = req.session.usuario;
+
+    if (!usuarioSesion) {
+      return res.status(401).json({ error: 'No hay sesión activa' });
+    }
+    const datos = await pool.query(
+      `SELECT u.idUsuario, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
+       DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
+       p.sexo, p.curp, m.municipio, e.estado
+       FROM dbo_usuario u
+       INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+       INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
+       INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
+       WHERE u.idUsuario = ?`,
+      [usuarioSesion.idUsuario]
+    );
+
+    if (datos.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const perfil = datos[0];
+    const nombreCompleto = [perfil.nombre, perfil.apellido_paterno, perfil.apellido_materno]
+    .filter(Boolean)
+    .join(' ');
+
+    // Verificar si los valores son de tipo correcto
+    if (!perfil || typeof perfil.idUsuario !== 'number') {
+      return res.status(500).json({ error: 'Error al obtener el perfil' });
+    }
+
+    return res.json({
+      mensaje: 'Sesión activa',
+      Datos_Personales: {
+        nombre: nombreCompleto,
+        usuario: perfil.usuario,
+        correo: perfil.correo_electronico,
+        fechaNacimiento: perfil.fechaNacimiento,
+        sexo: perfil.sexo,
+        curp: perfil.curp,
+        estado: perfil.estado,
+        municipio: perfil.municipio
+      }
+    });
+  } catch (err) {
+    console.error('Error al mostrar datos del usuario');
+    res.status(500).json({error: 'Error al consultar datos del usuario', detalle: err.message })
   }
 };

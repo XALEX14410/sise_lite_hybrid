@@ -8,5 +8,5 @@ const {loginSchema} = require('../validators/authValidator');
 router.post('/login', validar(loginSchema), loginController.login);
 router.post('/logout', loginController.logout);
 router.get('/roles', verificarPerfil(['superadmin']), loginController.getRoles);
-router.get('/perfil', loginController.getPerfil);
+router.get('/perfil', loginController.getDatosPersonales);
 module.exports = router;
