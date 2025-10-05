@@ -98,14 +98,15 @@ exports.getDatosPersonales = async (req, res) => {
     }
 
     const perfil = datos[0];
-    const nombreCompleto = [perfil.nombre, perfil.apellido_paterno, perfil.apellido_materno]
+    const apellidoCompleto = [perfil.apellido_paterno, perfil.apellido_materno]
     .filter(Boolean)
     .join(' ');
 
     return res.json({
       mensaje: 'Sesión activa',
       Datos_Personales: {
-        nombre: nombreCompleto,
+        nombre: perfil.nombre,
+        apellidos: apellidoCompleto,
         usuario: perfil.usuario,
         correo: perfil.correo_electronico,
         fechaNacimiento: perfil.fechaNacimiento,
