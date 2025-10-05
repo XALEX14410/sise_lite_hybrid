@@ -91,4 +91,10 @@ const usuarioSchema = Joi.object({
   })
 });
 
-module.exports = {usuarioSchema}
+const datosPersonalSchema = Joi.object({
+  idUsuario: Joi.number().integer().required().messages({
+    'number.base': 'El perfil debe ser un número'
+  })
+});
+
+module.exports = {usuarioSchema, datosPersonalSchema}

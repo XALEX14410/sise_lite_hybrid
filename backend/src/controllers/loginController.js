@@ -102,11 +102,6 @@ exports.getDatosPersonales = async (req, res) => {
     .filter(Boolean)
     .join(' ');
 
-    // Verificar si los valores son de tipo correcto
-    if (!perfil || typeof perfil.idUsuario !== 'number') {
-      return res.status(500).json({ error: 'Error al obtener el perfil' });
-    }
-
     return res.json({
       mensaje: 'Sesión activa',
       Datos_Personales: {
