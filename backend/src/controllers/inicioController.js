@@ -47,13 +47,13 @@ exports.obtenerInicio = async (req, res) => {
       };
 
       return res.json({
-      mensaje: `¡Bienvenido ${nombrePerfil}, ${nombreCompleto}!`,
+      mensaje: `¡Bienvenido ${nombrePerfil.toUpperCase()}, ${nombreCompleto}!`,
       datosGenerales
     });
     }
 
     return res.json({
-      mensaje: `¡Bienvenido ${nombrePerfil}, ${nombreCompleto}!`,
+      mensaje: `¡Bienvenido ${nombrePerfil.toUpperCase()}, ${nombreCompleto}!`,
     });
 
   } catch (error) {

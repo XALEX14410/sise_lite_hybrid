@@ -73,7 +73,7 @@ exports.createUsuario = async (req, res) => {
     const nombrePerfil = perfilResult[0]?.nombre;
 
     // Insertar en dbo_docente si el perfil es Docente
-    if (nombrePerfil === 'docente') {
+    if (nombrePerfil === 'Docente') {
       await conn.query(
         `INSERT INTO dbo_docente (idUsuario)
          VALUES (?)`,
@@ -82,7 +82,7 @@ exports.createUsuario = async (req, res) => {
     }
 
     // Insertar en dbo_alumno si el perfil es Estudiante
-    if (nombrePerfil === 'alumno') {
+    if (nombrePerfil === 'Alumno') {
       await conn.query(
         `INSERT INTO dbo_alumno (idUsuario, idCarrera, matricula, semestre_actual)
         VALUES (?, ?, ?, ?)`,
