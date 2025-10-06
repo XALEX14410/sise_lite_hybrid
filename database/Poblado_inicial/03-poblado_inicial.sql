@@ -47,7 +47,7 @@ VALUES
 -- Datos para dbo_usuario
 -- Nota: 'idGrupo' se dejará como NULL por ahora para evitar un error, ya que no se ha poblado 'dbo_grupo'.
 -- Se actualizará más tarde.
-INSERT INTO dbo_usuario (idPersona, nuevoUsuario, Usuario, Contraseña, correo_electronico, fecha_de_creacion, fecha_de_modificacion, status, ultimo_login, idGrupo)
+INSERT INTO dbo_usuario (idPersona, nuevoUsuario, Usuario, Contrasena, correo_electronico, fecha_de_creacion, fecha_de_modificacion, status, ultimo_login, idGrupo)
 VALUES
 (1, 1, 0001, '0001', 'superadmin@email.com', NOW(), NOW(), 1, CURDATE(), NULL), -- Usuario id 1
 (2, 1, 0002, '0002', 'admin@email.com', NOW(), NOW(), 1, CURDATE(), NULL),      -- Usuario id 2
