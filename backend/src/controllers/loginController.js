@@ -74,6 +74,23 @@ exports.getRoles = async (req, res) => {
   }
 };
 
+exports.getRolbyID = async (req, res) => {
+  const idPerfil = req.params.id;
+  try {
+    if (!idPerfil || isNaN(Number(idPerfil)) || Number(idPerfil) <= 0) {
+      return res.status(400).json({ error: 'ID de usuario inválido' });
+    }
+    const conn = await pool.query('SELECT nombre, descripcion FROM dbo_login_perfil WHERE idPerfil = ?', [Number(idPerfil)]);
+    if (conn[0].length === 0) {
+      return res.status(404).json({ error: 'Rol no encontrado' });
+    }
+    return res.json(conn[0]);
+  } catch (error) {
+    console.error('Error al obtener rol:', error);
+    return res.status(500).json({ error: 'Error al obtener rol' });
+  } 
+};
+
 exports.getDatosPersonales = async (req, res) => {
   try {
     const usuarioSesion = req.session.usuario;
