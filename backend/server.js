@@ -24,6 +24,7 @@ const docenteRoutes = require('./src/routes/docenteRoutes');
 const municipiosRoutes = require('./src/routes/municipiosRoutes');
 const estadosRoutes = require('./src/routes/estadosRoutes');
 const inicioRouter = require('./src/routes/inicioRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
 
 app.use(express.json());
 app.use(express.static('public'));
@@ -41,6 +42,7 @@ app.use(session({
   }
 }));
 
+app.use('/admin', adminRoutes);
 app.use('/usuario', usuarioRoutes);
 app.use('/auth', loginRoutes);
 app.use('/auth', loginRoutes);
