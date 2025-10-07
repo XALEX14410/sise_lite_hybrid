@@ -3,9 +3,14 @@ const pool = require('../db/pool');
 exports.getAllDocentes = async (req, res) => {
   try {
     const rows = await pool.query(`
-      SELECT d.idDocente, u.usuario, u.correo_electronico
-      FROM dbo_docente d
-      INNER JOIN dbo_usuario u ON d.idUsuario = u.idUsuario
+      SELECT d.idDocente, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
+       DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
+       p.sexo, p.curp, m.municipio, e.estado
+       FROM dbo_docente d
+       INNER JOIN dbo_usuario u ON d.idUsuario = u.idUsuario
+       INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+       INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
+       INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
     `);
     res.json({ docentes: rows });
   } catch (err) {
@@ -18,9 +23,14 @@ exports.getDocentebyID = async (req, res) => {
   const idDocente = req.params.id;
   try {
     const rows = await pool.query(`
-      SELECT d.idDocente, u.usuario, u.correo_electronico
-      FROM dbo_docente d
-      INNER JOIN dbo_usuario u ON d.idUsuario = u.idUsuario
+      SELECT d.idDocente, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
+       DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
+       p.sexo, p.curp, m.municipio, e.estado
+       FROM dbo_docente d
+       INNER JOIN dbo_usuario u ON d.idUsuario = u.idUsuario
+       INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+       INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
+       INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
       WHERE d.idDocente = ?
     `, [idDocente]);
     res.json({ docentes: rows });

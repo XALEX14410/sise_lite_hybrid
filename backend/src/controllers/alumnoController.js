@@ -29,10 +29,15 @@ exports.getAlumnobyID = async (req, res) => {
   const idAlumno = req.params.id;
   try {
     const rows = await pool.query(`
-      SELECT a.idAlumno, u.usuario, u.correo_electronico
-      FROM dbo_alumno a
-      INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
-      WHERE a.idAlumno = ?
+      SELECT a.idAlumno, a.matricula, a.semestre_actual, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
+       DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
+       p.sexo, p.curp, m.municipio, e.estado
+       FROM dbo_alumno a
+       INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
+       INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+       INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
+       INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
+       WHERE a.idAlumno = ?
     `, [idAlumno]);
     res.json({ alumnos: rows });
 
@@ -91,13 +96,17 @@ exports.getMateriaPorEstudiante = async (req, res) => {
 
 //MOSTRAR TODOS LOS ALUMNOS QUE HAY EN EL SISTEMA (ADMIN/SUPERADMIN)
 
-exports.getAllAlumnos = async (removeEventListener, res) => {
+exports.getAllAlumnos = async (req, res) => {
   try {
     const alumnos = await pool.query(`
-      SELECT a.idAlumno, u.usuario, u.correo_electronico
-      FROM dbo_alumno a
-      INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
-      WHERE a.idAlumno = ?
+      SELECT a.idAlumno, a.matricula, a.semestre_actual, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
+       DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
+       p.sexo, p.curp, m.municipio, e.estado
+       FROM dbo_alumno a
+       INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
+       INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+       INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
+       INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
     `);
     res.json({ alumnos });
   } catch (err) {
