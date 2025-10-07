@@ -24,33 +24,90 @@ exports.getGruposDelAlumno = async (req, res) => {
 };
 
 //MOSTRAR UN ALUMNO ESPECIFICO POR ID (SUPERADMIN)
-
-exports.getAlumnobyID = async (req, res) => {
-  const idAlumno = req.params.id;
+exports.getAlumnoByID = async (req, res) => {
+  const idAlumno = req.params.id; 
   try {
     const rows = await pool.query(`
-      SELECT a.idAlumno, a.matricula, a.semestre_actual, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
-       DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
-       p.sexo, p.curp, m.municipio, e.estado
-       FROM dbo_alumno a
-       INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
-       INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
-       INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
-       INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
-       WHERE a.idAlumno = ?
+      SELECT a.idAlumno, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
+             DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
+             p.sexo, p.curp, m.municipio, e.estado
+      FROM dbo_alumno a
+      INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
+      INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+      INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
+      INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
+      WHERE a.idAlumno = ?
     `, [idAlumno]);
-    res.json({ alumnos: rows });
 
-  if (rows.length === 0) {
+    if (rows.length === 0) {
       return res.status(404).json({ error: 'Alumno no encontrado' });
     }
 
-    res.json({ docentes: rows[0] });
+    res.json({ alumno: rows[0] });
   } catch (err) {
-    console.error('Error al obtener Alumno:', err);
-    res.status(500).json({ error: 'Error al consultar Alumno', detalle: err.message });
+    console.error('Error al obtener alumno:', err);
+    res.status(500).json({ error: 'Error al consultar alumno', detalle: err.message });
   }
 };
+
+exports.crearAlumno = async (req, res) => {
+  const {
+    nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
+    sexo, curp, idEstado, idMunicipio,
+    usuario, contrasena, correo_electronico, matricula, semestre_actual, idCarrera
+  } = req.body;
+
+  const idPerfil = 4; 
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    await conn.beginTransaction();
+
+    const personaResult = await conn.query(
+      `INSERT INTO dbo_persona (nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio]
+    );
+    const idPersona = personaResult.insertId;
+
+    const usuarioResult = await conn.query(
+      `INSERT INTO dbo_usuario (idPersona, usuario, contrasena, correo_electronico)
+       VALUES (?, ?, ?, ?)`,
+      [idPersona, usuario, contrasena, correo_electronico]
+    );
+    const idUsuario = usuarioResult.insertId;
+
+    await conn.query(
+      `INSERT INTO dbo_alumno (idUsuario, idCarrera, matricula, semestre_actual)
+       VALUES (?, ?, ?, ?)`,
+      [idUsuario, idCarrera, matricula, semestre_actual]
+    );
+
+    // 4. Insertar en dbo_usuario_perfil
+    await conn.query(
+      `INSERT INTO dbo_usuario_perfil (idUsuario, idPerfil)
+       VALUES (?, ?)`,
+      [idUsuario, idPerfil]
+    );
+
+    await conn.commit();
+    res.json({
+      mensaje: 'Alumno creado correctamente',
+      idPersona: Number(idPersona),
+      idUsuario: Number(idUsuario),
+      perfil: 'Alumno'
+    });
+
+  } catch (err) {
+    if (conn) await conn.rollback();
+    console.error('Error al insertar alumno:', err);
+    res.status(500).json({ error: 'Error al insertar alumno', detalle: err.message });
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
 
 exports.getHorarioPorEstudiante = async (req, res) => {
   const idAlumno = req.params.id;

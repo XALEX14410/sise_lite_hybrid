@@ -6,6 +6,7 @@ const plantelController = require('../controllers/plantelController');
 const loginController = require('../controllers/loginController');
 const alumnoController = require('../controllers/alumnoController');
 const docenteController = require('../controllers/docenteController');
+const adminController = require('../controllers/adminController');
 
 //Ruta para ver los planteles registrados
 router.get('/plantel',verificarSesion,verificarPerfil(['Superadmin','Admin']), plantelController.getAllPlantel);
@@ -24,11 +25,14 @@ router.get('/roles/:id', verificarSesion, verificarPerfil(['Superadmin']), login
 //Ruta para ver todos los alumnos
 router.get('/alumnos', verificarSesion,verificarPerfil(['Superadmin', 'Admin']), alumnoController.getAllAlumnos)
 //Ruta para ver alumno por ID
-router.get('/alumnos/:id', verificarSesion,verificarPerfil(['Superadmin', 'Admin']), alumnoController.getAlumnobyID)
+router.get('/alumnos/:id', verificarSesion,verificarPerfil(['Superadmin', 'Admin']), alumnoController.getAlumnoByID)
 //Ruta para ver todos los docentes
 router.get('/docentes', verificarSesion,verificarPerfil(['Superadmin', 'Admin']), docenteController.getAllDocentes)
 //Ruta para ver docentes por ID
-router.get('/docentes/:id', verificarSesion,verificarPerfil(['Superadmin', 'Admin']), docenteController.getDocentebyID)
-
+router.get('/docentes/:id', verificarSesion,verificarPerfil(['Superadmin', 'Admin']), docenteController.getDocenteByID)
+//Ruta para ver todos los admin
+router.get('/administradores', verificarSesion,verificarPerfil(['Superadmin', 'Admin']), adminController.getAllAdmin)
+//Ruta para ver un admin por ID
+router.get('/administradores/:id', verificarSesion,verificarPerfil(['Superadmin', 'Admin']), adminController.getAdminByID)
 
 module.exports = router;
