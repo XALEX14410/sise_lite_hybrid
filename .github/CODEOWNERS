@@ -1,5 +1,24 @@
-# Archivo CODEOWNERS para definir el líder de proyecto como code owner
-# Solo XALEX14410 podrá aprobar PR en la rama develop
+# Archivo CODEOWNERS
 
-# Para toda la rama develop
-refs/heads/develop @XALEX14410
+# Backend (Node.js)
+backend/**           @js-ph
+
+# Frontend (Next.js)
+frontend/**          @Alex-LaLa
+
+# Base de datos (migraciones, esquemas)
+database/**          @Daniel37UwU
+diagrams/**          @Daniel37UwU
+
+# QA / Pruebas / Documentación
+tests/**             @Mora-Flores03
+docs/**              @ClCrr
+*.md                 @ClCrr                  # README y docs en raíz
+/README.md           @ClCrr
+
+# Infraestructura / Docker / CI
+infra/**             @XALEX14410
+.github/**           @XALEX14410             # Workflows, rulesets, etc.
+
+# Catch-all: líder y QA
+*                    @XALEX14410 @Mora-Flores03

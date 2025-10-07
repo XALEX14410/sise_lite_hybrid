@@ -7,3 +7,4 @@ router.post('/', estadoController.createEstados);
 router.put('/:id', estadoController.updateEstados);
 
 module.exports = router;
+
