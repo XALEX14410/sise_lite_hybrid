@@ -1,0 +1,23 @@
+%% Diagrama de estructura de base de datos (Mermaid)
+%% Este diagrama representa las principales tablas y relaciones del sistema académico.
+%% Para detalles completos, consulta database/Sistema/sisesqlhybrid.sql
+
+flowchart TD
+  usuario --> persona
+  usuario --> grupo
+  usuario --> login_perfil
+  usuario --> alumno
+  usuario --> docente
+  alumno --> carrera
+  carrera --> plantel
+  plantel --> estado
+  plantel --> municipio
+  grupo --> docente
+  grupo --> materias
+  materias --> carrera
+  inscripciones --> alumno
+  inscripciones --> grupo
+  calificaciones --> inscripciones
+  pagos --> becas
+  pagos --> usuario
+  menu_valido --> login_perfil

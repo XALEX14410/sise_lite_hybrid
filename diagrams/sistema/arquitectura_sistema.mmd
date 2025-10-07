@@ -1,0 +1,15 @@
+%% Diagrama general del sistema (Mermaid)
+%% Este diagrama muestra la interacción entre cliente, frontend, API y base de datos.
+%% Arquitectura centralizada: el usuario accede al frontend, que consume la API y esta a su vez interactúa con la base de datos.
+%% Para más detalles, consulta docs/arquitectura.md
+
+flowchart LR
+  U["Usuario"] -- "HTTPS" --> WEB["Frontend (Next.js)"]
+  WEB -- "fetch (JSON)" --> API["API (Node.js)"]
+  API -- "SQL" --> DB[(MariaDB)]
+
+  subgraph "Docker Compose"
+    WEB
+    API
+    DB
+  end
