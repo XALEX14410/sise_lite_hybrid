@@ -1,4 +1,5 @@
 # Documento de Arquitectura — Next.js + Node.js + MariaDB
+
 **Fecha:** 2025-08-25  
 **Arquitecto:** @XALEX14410  
 **Apoyo QA/Doc:** @Mora-Flores03  
@@ -22,21 +23,17 @@ Arquitectura **centralizada** y **simple**: Frontend en **Next.js**, API en **No
 - **Docker Compose:** Orquestación para arranque local de todos los servicios.
 
 ## 4) Diagrama general (editable)
-Ver `diagrams/sistema/arquitectura_sistema.mmd` (Mermaid).
+Ver `diagrams/arquitectura.mmd` (Mermaid).
 
 ```mermaid
-%% Diagrama general del sistema (ver archivo para explicación)
 flowchart LR
   U["Usuario"] -- "HTTPS" --> WEB["Frontend (Next.js)"]
-  WEB -- "fetch (JSON)" --> API["API (Node.js)"]
+  WEB -- "fetch" --> API["API (Node.js)"]
   API -- "SQL" --> DB[(MariaDB)]
 
-  subgraph "Docker Compose"
-  WEB
-  API
-  DB
-  end
 ```
+
+
 ## 5) Flujos de comunicación (resumen)
 1. **SSR/ISR:** Next.js renderiza páginas en servidor y obtiene datos desde la API.  
 2. **CRUD:** Frontend → API → DB; respuestas JSON.  
@@ -61,6 +58,7 @@ flowchart LR
 .github/PULL_REQUEST_TEMPLATE.md
 .env.example
 ```
+
 ## 8) Gobernanza: dueños y revisores
 **Code Owners propuestos** (ver archivo `/.github/CODEOWNERS`):
 - **/**            → @XALEX14410 @Mora-Flores03
@@ -75,18 +73,8 @@ flowchart LR
 - Si el dueño del área es autor, el 2.º revisor será **@XALEX14410** o el dueño del área predominante alternativa.
 
 ## 9) Definition of Done (historia)
-
-
-La siguiente arquitectura ha sido revisada y validada por los siguientes miembros del equipo:
-```
-- **@Mora-Flores03** (QA/Documentación) — 2025-09-04
-- **@XALEX14410** (Arquitecto) — 2025-09-04
-
-Se deja constancia de la validación para cumplir con la definición de "Done".
-```
-# Documento de Arquitectura — Next.js + Node.js + MariaDB
-
-**Fecha:** 2025-08-25  
-**Arquitecto:** @XALEX14410  
-**Apoyo QA/Doc:** @Mora-Flores03  
-**Repositorio:** [_(URL)_](https://github.com/XALEX14410/sise_lite_hybrid.git)
+- Diagrama con cliente, servidor (web/API), BD y servicios.  
+- Tipo de arquitectura **centralizada** con **justificación**.  
+- Formato editable en repo compartido.  
+- Documento con **flujos de comunicación**.  
+- **Validación por 2 miembros** (ver plantilla de PR).
