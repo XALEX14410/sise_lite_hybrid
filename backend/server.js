@@ -8,8 +8,8 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({
-  origin: 'http://172.16.2.31:3000', // la dirección de tu front
-  credentials: true               // permite cookies
+  origin: true, // tu frontend
+  credentials: true
 }));
 
 const usuarioRoutes = require('./src/routes/usuarioRoutes');
@@ -25,7 +25,12 @@ const municipiosRoutes = require('./src/routes/municipiosRoutes');
 const estadosRoutes = require('./src/routes/estadosRoutes');
 const inicioRouter = require('./src/routes/inicioRoutes');
 
+app.use(express.json());
+app.use(express.static('public'));
+app.use(morgan('combined'));
+
 app.use(session({
+  secret: process.env.SESSION_SECRET || 'tu-secreto',
   secret: process.env.SESSION_SECRET || 'tu-secreto',
   resave: false,
   saveUninitialized: false,
@@ -36,19 +41,20 @@ app.use(session({
   }
 }));
 
-app.use(express.json());
-app.use(express.static('public'));
-app.use(morgan('combined'));
-
 app.use('/usuario', usuarioRoutes);
+app.use('/auth', loginRoutes);
 app.use('/auth', loginRoutes);
 app.use('/carrera', carreraRoutes);
 app.use('/materia', materiaRoutes);
+app.use('/inscripcione', inscripcionRoutes);
 app.use('/inscripcione', inscripcionRoutes);
 app.use('/grupo', grupoRoutes);
 app.use('/horario', horarioRoutes);
 app.use('/docente', docenteRoutes);
 app.use('/alumno', alumnoRoutes);
+app.use('/municipios', municipiosRoutes);
+app.use('/estados', estadosRoutes);
+app.use('/inicio', inicioRouter);
 app.use('/municipios', municipiosRoutes);
 app.use('/estados', estadosRoutes);
 app.use('/inicio', inicioRouter);
