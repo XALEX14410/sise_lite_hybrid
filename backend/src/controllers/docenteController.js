@@ -45,33 +45,6 @@ exports.getDocenteByID = async (req, res) => {
   }
 };
 
-exports.getAdminByID = async (req, res) => {
-  const idUsuario = req.params.id; 
-  try {
-    const rows = await pool.query(`
-      SELECT l.idPerfil, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
-             DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
-             p.sexo, p.curp, m.municipio, e.estado
-      FROM dbo_usuario_perfil l
-      INNER JOIN dbo_usuario u ON l.idUsuario = u.idUsuario
-      INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
-      INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
-      INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
-      WHERE l.idPerfil = 2
-      AND l.idUsuario = ?
-    `, [idUsuario]);
-
-    if (rows.length === 0) {
-      return res.status(404).json({ error: 'Administrador no encontrado' });
-    }
-
-    res.json({ admin: rows[0] });
-  } catch (err) {
-    console.error('Error al obtener administrador:', err);
-    res.status(500).json({ error: 'Error al consultar administrador', detalle: err.message });
-  }
-};
-
 exports.crearDocente = async (req, res) => {
   const {
     nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
