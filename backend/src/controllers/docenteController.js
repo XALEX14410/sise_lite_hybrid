@@ -38,7 +38,7 @@ exports.getDocenteByID = async (req, res) => {
       return res.status(404).json({ error: 'Docente no encontrado' });
     }
 
-    res.json({ alumno: rows[0] });
+    res.json({ docente: rows[0] });
   } catch (err) {
     console.error('Error al obtener docente:', err);
     res.status(500).json({ error: 'Error al consultar docente', detalle: err.message });
