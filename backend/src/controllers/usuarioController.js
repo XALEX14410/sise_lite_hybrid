@@ -73,7 +73,7 @@ exports.createUsuario = async (req, res) => {
     const nombrePerfil = perfilResult[0]?.nombre;
 
     // Insertar en dbo_docente si el perfil es Docente
-    if (nombrePerfil === 'Docente') {
+    if (nombrePerfil === 'docente') {
       await conn.query(
         `INSERT INTO dbo_docente (idUsuario)
          VALUES (?)`,
