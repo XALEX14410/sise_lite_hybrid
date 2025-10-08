@@ -38,7 +38,7 @@ services:
   web:
     # Construye la imagen usando el Dockerfile que se encuentra en la carpeta './frontend'.
     build:
-      context: ./frontend1
+      context: ./frontend
     # Define variables de entorno para que el frontend se conecte al backend.
     environment:
       NEXT_PUBLIC_API_URL: http://api:4000  # Usa el nombre del servicio 'api' para la conexión.
