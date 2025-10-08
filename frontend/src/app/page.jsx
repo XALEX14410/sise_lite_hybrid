@@ -11,8 +11,8 @@ export default function HomePage() {
   return (
     <main className="flex h-screen items-center justify-center bg-gray-100">
       <div className="p-8 bg-white shadow-lg rounded-2xl text-center">
-        <h1 className="text-3xl font-bold mb-6">Bienvenido a la App</h1>
-        <p className="mb-6">Accede con tu cuenta para ver tu perfil y funciones.</p>
+        <h1 className="text-3xl font-bold mb-6">Bienvenido a Sise Lite Hybrid</h1>
+        <p className="mb-6">Accede con tu usuario y contraseña.</p>
         <button
           onClick={goToLogin}
           className="px-6 py-3 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
