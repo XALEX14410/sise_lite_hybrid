@@ -32,7 +32,7 @@ export default function LoginPage() {
       }
 
       console.log('Login exitoso:', data);
-      router.push('/perfil'); // redirige al perfil
+      router.push('/inicio'); 
     } catch (err) {
       console.error(err);
       setError('Error de conexión con el backend');
