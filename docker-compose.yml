@@ -27,7 +27,6 @@ services:
   api:
     build:
       context: ./backend
-<<<<<<< HEAD
     # Define variables de entorno para que el backend se conecte a la base de datos.
     environment:
       DB_HOST: db      # Usa el nombre del servicio 'db' para la conexión.
@@ -36,10 +35,8 @@ services:
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       API_PORT: 9000
-=======
     env_file:
       - ./backend/.env
->>>>>>> ac7198d89d9fbe6fa2509f6356b66dea52a72ef2
     ports:
       - "4000:4000"
     depends_on:
@@ -49,7 +46,7 @@ services:
   web:
     # Construye la imagen usando el Dockerfile que se encuentra en la carpeta './frontend'.
     build:
-      context: ./frontend
+      context: ./frontend1
     # Define variables de entorno para que el frontend se conecte al backend.
     environment:
       NEXT_PUBLIC_API_URL: http://api:4000  # Usa el nombre del servicio 'api' para la conexión.
