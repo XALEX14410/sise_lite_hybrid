@@ -32,7 +32,6 @@ app.use(morgan('combined'));
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'tu-secreto',
-  secret: process.env.SESSION_SECRET || 'tu-secreto',
   resave: false,
   saveUninitialized: false,
   cookie: {
