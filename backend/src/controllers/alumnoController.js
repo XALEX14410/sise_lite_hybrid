@@ -1,28 +1,5 @@
 const pool = require('../db/pool');
 
-exports.getGruposDelAlumno = async (req, res) => {
-  const idAlumno = req.params.id;
-  try {
-    const grupos = await pool.query(`
-      SELECT 
-        g.clave_grupo AS nombre_grupo,
-        m.nombre_materia,
-        d.idDocente,
-        CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre_docente
-      FROM dbo_inscripciones i
-      INNER JOIN dbo_grupo g ON i.idGrupo = g.idGrupo
-      INNER JOIN dbo_materias m ON g.idMateria = m.idMateria
-      INNER JOIN dbo_docente d ON g.idDocente = d.idDocente
-      INNER JOIN dbo_persona p ON d.idUsuario = p.idPersona
-      WHERE i.idAlumno = ?
-    `, [idAlumno]);
-    res.json({ grupos });
-  } catch (err) {
-    console.error('Error al obtener grupos del alumno:', err);
-    res.status(500).json({ error: 'Error al consultar grupos', detalle: err.message });
-  }
-};
-
 //MOSTRAR UN ALUMNO ESPECIFICO POR ID (SUPERADMIN)
 exports.getAlumnoByID = async (req, res) => {
   const idAlumno = req.params.id; 
@@ -50,7 +27,7 @@ exports.getAlumnoByID = async (req, res) => {
   }
 };
 
-exports.crearAlumno = async (req, res) => {
+exports.createAlumno = async (req, res) => {
   const {
     nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
     sexo, curp, idEstado, idMunicipio,
@@ -108,49 +85,6 @@ exports.crearAlumno = async (req, res) => {
   }
 };
 
-
-exports.getHorarioPorEstudiante = async (req, res) => {
-  const idAlumno = req.params.id;
-
-  try {
-    const rows = await pool.query(
-      `SELECT h.*
-       FROM dbo_horario h
-       JOIN dbo_grupo g ON h.idGrupo = g.idGrupo
-       JOIN dbo_inscripciones i ON g.idGrupo = i.idGrupo
-       WHERE i.idAlumno = ?
-      `,
-      [idAlumno]
-    );
-
-    res.json({ horario: rows });
-  } catch (error) {
-    console.error('Error al obtener horario del alumno:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-};
-
-exports.getMateriaPorEstudiante = async (req, res) => {
-  const idAlumno = req.params.id;
-
-  try {
-    const rows = await pool.query(
-      `SELECT m.*
-       FROM dbo_materias m
-       JOIN dbo_carrera c ON m.idCarrera = c.idCarrera
-       JOIN dbo_alumno a ON c.idCarrera = a.idCarrera
-       WHERE a.idAlumno = ?
-      `,
-      [idAlumno]
-    );
-
-    res.json({ materia: rows });
-  } catch (error) {
-    console.error('Error al obtener materias del alumno:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-};
-
 //MOSTRAR TODOS LOS ALUMNOS QUE HAY EN EL SISTEMA (ADMIN/SUPERADMIN)
 
 exports.getAllAlumnos = async (req, res) => {
@@ -169,5 +103,96 @@ exports.getAllAlumnos = async (req, res) => {
   } catch (err) {
     console.error('Error al obtener alumnos:', err);
     res.status(500).json({ error: 'Error al consultar alumnos', detalle: err.message });
+  }
+};
+
+exports.updateAlumno = async (req, res) => {
+  const {
+    idPersona, idUsuario,nombre,apellido_paterno,apellido_materno,fecha_de_nacimiento,
+    sexo,curp,idEstado,idMunicipio,usuario,contrasena,correo_electronico,matricula,semestre_actual,idCarrera
+  } = req.body;
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    await conn.beginTransaction();
+
+    await conn.query(
+      `UPDATE dbo_persona
+       SET nombre = ?, apellido_paterno = ?, apellido_materno = ?, fecha_de_nacimiento = ?,
+           sexo = ?, curp = ?, idEstado = ?, idMunicipio = ?
+       WHERE idPersona = ?`,
+      [nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio, idPersona]
+    );
+
+    await conn.query(
+      `UPDATE dbo_usuario
+       SET usuario = ?, contrasena = ?, correo_electronico = ?
+       WHERE idUsuario = ?`,
+      [usuario, contrasena, correo_electronico, idUsuario]
+    );
+
+    await conn.query(
+      `UPDATE dbo_alumno
+       SET idCarrera = ?, matricula = ?, semestre_actual = ?
+       WHERE idUsuario = ?`,
+      [idCarrera, matricula, semestre_actual, idUsuario]
+    );
+
+    await conn.commit();
+
+    res.json({ mensaje: 'Alumno actualizado correctamente' });
+
+  } catch (err) {
+    if (conn) await conn.rollback();
+    console.error('Error al actualizar alumno:', err);
+    res.status(500).json({ error: 'Error al actualizar alumno', detalle: err.message });
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
+exports.deleteAlumno = async (req, res) => {
+  const { idUsuario, idPersona } = req.body;
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    await conn.beginTransaction();
+
+    // 1. Borrar relación de perfil
+    await conn.query(
+      `DELETE FROM dbo_usuario_perfil WHERE idUsuario = ?`,
+      [idUsuario]
+    );
+
+    // 2. Borrar de alumno
+    await conn.query(
+      `DELETE FROM dbo_alumno WHERE idUsuario = ?`,
+      [idUsuario]
+    );
+
+    // 3. Borrar de usuario
+    await conn.query(
+      `DELETE FROM dbo_usuario WHERE idUsuario = ?`,
+      [idUsuario]
+    );
+
+    // 4. Borrar persona
+    await conn.query(
+      `DELETE FROM dbo_persona WHERE idPersona = ?`,
+      [idPersona]
+    );
+
+    await conn.commit();
+
+    res.json({ mensaje: 'Alumno eliminado correctamente' });
+
+  } catch (err) {
+    if (conn) await conn.rollback();
+    console.error('Error al eliminar alumno:', err);
+    res.status(500).json({ error: 'Error al eliminar alumno', detalle: err.message });
+  } finally {
+    if (conn) conn.release();
   }
 };

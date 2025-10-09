@@ -39,17 +39,17 @@ exports.getGrupoById = async (req, res) => {
 };
 
 exports.createGrupo = async (req, res) => {
-  const { preido, clave_grupo, cupo, idMateria, idDocente } = req.body;
+  const { periodo, clave_grupo, cupo, idMateria, idDocente } = req.body;
 
-  if (!preido || !clave_grupo || !cupo || !idMateria || !idDocente) {
+  if (!periodo || !clave_grupo || !cupo || !idMateria || !idDocente) {
     return res.status(400).json({ error: 'Faltan datos del grupo' });
   }
 
   try {
     const result = await pool.query(`
-      INSERT INTO dbo_grupo (preido, clave_grupo, cupo, idMateria, idDocente)
-      VALUES (?, ?, ?, ?)
-    `, [preido, clave_grupo, cupo, idMateria, idDocente]);
+      INSERT INTO dbo_grupo (periodo, clave_grupo, cupo, idMateria, idDocente)
+      VALUES (?, ?, ?, ?, ?)
+    `, [periodo, clave_grupo, cupo, idMateria, idDocente]);
 
     res.json({ mensaje: 'Grupo creado correctamente', idGrupo: Number(result.insertId) });
   } catch (err) {
@@ -60,18 +60,18 @@ exports.createGrupo = async (req, res) => {
 
 exports.updateGrupo = async (req, res) => {
   const idGrupo = req.params.id;
-  const { clave_grupo, cupo, idMateria, idDocente } = req.body;
+  const { periodo, clave_grupo, cupo, idMateria, idDocente } = req.body;
 
-  if (!clave_grupo || !cupo || !idMateria || !idDocente) {
+  if (!periodo || !clave_grupo || !cupo || !idMateria || !idDocente) {
     return res.status(400).json({ error: 'Faltan datos para actualizar el grupo' });
   }
 
   try {
     const result = await pool.query(`
       UPDATE dbo_grupo
-      SET clave_grupo = ?, cupo = ?, idMateria = ?, idDocente = ?
+      SET periodo = ?, clave_grupo = ?, cupo = ?, idMateria = ?, idDocente = ?
       WHERE idGrupo = ?
-    `, [clave_grupo, cupo, idMateria, idDocente, idGrupo]);
+    `, [periodo, clave_grupo, cupo, idMateria, idDocente, idGrupo]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Grupo no encontrado' });
@@ -98,28 +98,5 @@ exports.deleteGrupo = async (req, res) => {
   } catch (err) {
     console.error('Error al eliminar grupo:', err);
     res.status(500).json({ error: 'Error al eliminar grupo', detalle: err.message });
-  }
-};
-
-exports.getHorarioCompletoDelGrupo = async (req, res) => {
-  const idGrupo = req.params.id;
-
-  try {
-    const horario = await pool.query(`
-      SELECT h.dia_semana, h.hora, h.aula, m.nombre_materia, m.semestre, m.creditos,
-             u.usuario AS docente
-      FROM dbo_horario h
-      INNER JOIN dbo_grupo g ON h.idGrupo = g.idGrupo
-      INNER JOIN dbo_materias m ON g.idMateria = m.idMateria
-      INNER JOIN dbo_docente d ON g.idDocente = d.idDocente
-      INNER JOIN dbo_usuario u ON d.idUsuario = u.idUsuario
-      WHERE h.idGrupo = ?
-      ORDER BY FIELD(h.dia_semana, 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'), h.hora
-    `, [idGrupo]);
-
-    res.json({ horario });
-  } catch (err) {
-    console.error('Error al obtener horario del grupo:', err);
-    res.status(500).json({ error: 'Error al consultar horario', detalle: err.message });
   }
 };

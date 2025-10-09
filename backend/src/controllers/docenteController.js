@@ -45,7 +45,7 @@ exports.getDocenteByID = async (req, res) => {
   }
 };
 
-exports.crearDocente = async (req, res) => {
+exports.createDocente = async (req, res) => {
   const {
     nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
     sexo, curp, idEstado, idMunicipio,
@@ -102,91 +102,97 @@ exports.crearDocente = async (req, res) => {
   }
 };
 
-exports.getGruposDelDocente = async (req, res) => {
-  const idDocente = req.params.id;
+exports.updateDocente = async (req, res) => {
+  const {
+    idPersona,
+    idUsuario,
+    nombre,
+    apellido_paterno,
+    apellido_materno,
+    fecha_de_nacimiento,
+    sexo,
+    curp,
+    idEstado,
+    idMunicipio,
+    usuario,
+    contrasena,
+    correo_electronico
+  } = req.body;
+
+  let conn;
   try {
-    const rows = await pool.query(`
-      SELECT g.idGrupo, g.clave_grupo, g.cupo, m.nombre_materia, m.semestre, m.creditos
-      FROM dbo_grupo g
-      INNER JOIN dbo_materias m ON g.idMateria = m.idMateria
-      WHERE g.idDocente = ?
-    `, [idDocente]);
+    conn = await pool.getConnection();
+    await conn.beginTransaction();
 
-    res.json({ cursos: rows });
-  } catch (err) {
-    console.error('Error al obtener cursos del docente:', err);
-    res.status(500).json({ error: 'Error al consultar cursos', detalle: err.message });
-  }
-};
-
-exports.getEstudiantesDelDocente = async (req, res) => {
-  const idDocente = req.params.id;
-  try {
-    const rows = await pool.query(`
-      SELECT a.idAlumno, u.usuario, u.correo_electronico, a.matricula, a.semestre_actual
-      FROM dbo_inscripciones i
-      INNER JOIN dbo_grupo g ON i.idGrupo = g.idGrupo
-      INNER JOIN dbo_alumno a ON i.idAlumno = a.idAlumno
-      INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
-      WHERE g.idDocente = ?
-    `, [idDocente]);
-
-    res.json({ estudiantes: rows });
-  } catch (err) {
-    console.error('Error al obtener estudiantes del docente:', err);
-    res.status(500).json({ error: 'Error al consultar estudiantes', detalle: err.message });
-  }
-};
-
-exports.getResumenDelDocente = async (req, res) => {
-  const idDocente = req.params.id;
-
-  try {
-    const grupos = await pool.query(`
-      SELECT g.idGrupo, g.clave_grupo, m.nombre_materia, m.semestre, m.creditos
-      FROM dbo_grupo g
-      INNER JOIN dbo_materias m ON g.idMateria = m.idMateria
-      WHERE g.idDocente = ?
-    `, [idDocente]);
-
-    const estudiantes = await pool.query(`
-      SELECT g.idGrupo, a.idAlumno, u.usuario, a.matricula
-      FROM dbo_inscripciones i
-      INNER JOIN dbo_grupo g ON i.idGrupo = g.idGrupo
-      INNER JOIN dbo_alumno a ON i.idAlumno = a.idAlumno
-      INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
-      WHERE g.idDocente = ?
-    `, [idDocente]);
-
-    const horarios = await pool.query(`
-      SELECT g.idGrupo, h.dia_semana, h.hora, h.aula
-      FROM dbo_horario h
-      INNER JOIN dbo_grupo g ON h.idGrupo = g.idGrupo
-      WHERE g.idDocente = ?
-    `, [idDocente]);
-
-    res.json({ grupos, estudiantes, horarios });
-  } catch (err) {
-    console.error('Error al obtener resumen del docente:', err);
-    res.status(500).json({ error: 'Error al consultar resumen', detalle: err.message });
-  }
-};
-
-exports.getHorarioPorDocente = async (req, res) => {
-  const idDocente = req.params.id;
-
-  try {
-    const rows = await pool.query(
-      `SELECT h.*
-       FROM dbo_horario h
-       JOIN dbo_grupo g ON h.idGrupo = g.idGrupo
-       WHERE g.idDocente = ?`,
-      [idDocente]
+    // 1. Actualizar datos personales
+    await conn.query(
+      `UPDATE dbo_persona
+       SET nombre = ?, apellido_paterno = ?, apellido_materno = ?, fecha_de_nacimiento = ?,
+           sexo = ?, curp = ?, idEstado = ?, idMunicipio = ?
+       WHERE idPersona = ?`,
+      [nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio, idPersona]
     );
 
-    res.json({ horario: rows });
-  } catch (error) {
-    console.error('Error al obtener horario del docente:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    // 2. Actualizar usuario
+    await conn.query(
+      `UPDATE dbo_usuario
+       SET usuario = ?, contrasena = ?, correo_electronico = ?
+       WHERE idUsuario = ?`,
+      [usuario, contrasena, correo_electronico, idUsuario]
+    );
+
+    await conn.commit();
+    res.json({ mensaje: 'Docente actualizado correctamente' });
+
+  } catch (err) {
+    if (conn) await conn.rollback();
+    console.error('Error al actualizar docente:', err);
+    res.status(500).json({ error: 'Error al actualizar docente', detalle: err.message });
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
+exports.deleteDocente = async (req, res) => {
+  const { idUsuario, idPersona } = req.body;
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    await conn.beginTransaction();
+
+    // 1. Eliminar relación de perfil
+    await conn.query(
+      `DELETE FROM dbo_usuario_perfil WHERE idUsuario = ?`,
+      [idUsuario]
+    );
+
+    // 2. Eliminar registro en docente
+    await conn.query(
+      `DELETE FROM dbo_docente WHERE idUsuario = ?`,
+      [idUsuario]
+    );
+
+    // 3. Eliminar usuario
+    await conn.query(
+      `DELETE FROM dbo_usuario WHERE idUsuario = ?`,
+      [idUsuario]
+    );
+
+    // 4. Eliminar persona
+    await conn.query(
+      `DELETE FROM dbo_persona WHERE idPersona = ?`,
+      [idPersona]
+    );
+
+    await conn.commit();
+    res.json({ mensaje: 'Docente eliminado correctamente' });
+
+  } catch (err) {
+    if (conn) await conn.rollback();
+    console.error('Error al eliminar docente:', err);
+    res.status(500).json({ error: 'Error al eliminar docente', detalle: err.message });
+  } finally {
+    if (conn) conn.release();
   }
 };

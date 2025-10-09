@@ -22,10 +22,10 @@ export default function InicioPage() {
 
         if (!res.ok) throw new Error(data.mensaje || 'Error al obtener datos');
 
-        console.log('✅ Respuesta del backend:', data); // 👈 para depurar
+        console.log('Respuesta del backend:', data); // 👈 para depurar
         setDatos(data);
       } catch (err) {
-        console.error('❌ Error en fetchInicio:', err);
+        console.error('Error en fetchInicio:', err);
         setError(err.message);
       }
     };
@@ -56,32 +56,32 @@ export default function InicioPage() {
     );
 
   return (
-    <main className="flex flex-col h-screen items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg text-center">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">{datos.mensaje}</h1>
+  <main className="flex flex-col h-screen items-center justify-center bg-gray-100 dark:bg-gray-900 p-6">
+    <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-full max-w-lg text-center">
+      <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">{datos.mensaje}</h1>
 
-        {datos.datosGenerales ? (
-          <div className="grid grid-cols-2 gap-4 text-left">
-            {Object.entries(datos.datosGenerales).map(([key, value]) => (
-              <div key={key} className="p-3 bg-gray-50 rounded">
-                <p className="font-semibold capitalize">
-                  {key.replace(/([A-Z])/g, ' $1')}
-                </p>
-                <p className="text-xl">{value}</p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-700 mt-4">No hay datos generales disponibles.</p>
-        )}
+      {datos.datosGenerales ? (
+        <div className="grid grid-cols-2 gap-4 text-left">
+          {Object.entries(datos.datosGenerales).map(([key, value]) => (
+            <div key={key} className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
+              <p className="font-semibold capitalize text-gray-900 dark:text-gray-200">
+                {key.replace(/([A-Z])/g, ' $1')}
+              </p>
+              <p className="text-xl text-gray-800 dark:text-gray-100">{value}</p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-700 dark:text-gray-300 mt-4">No hay datos generales disponibles.</p>
+      )}
 
-        <button
-          onClick={() => router.push('/perfil')}
-          className="mt-6 w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
-        >
-          Ver perfil
-        </button>
-      </div>
-    </main>
-  );
+      <button
+        onClick={() => router.push('/perfil')}
+        className="mt-6 w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
+      >
+        Ver perfil
+      </button>
+    </div>
+  </main>
+);
 }

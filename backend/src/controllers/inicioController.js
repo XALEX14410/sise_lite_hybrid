@@ -28,11 +28,15 @@ exports.obtenerInicio = async (req, res) => {
 
     if (idPerfil === 1 || idPerfil === 2) {
       // Si es Admin o Superadmin
-      const [docentes, estudiantes, materias, carreras, roles, administradores] = await Promise.all([
+      const [docentes, estudiantes, grupos, inscripciones, materias, carreras, horarios, planteles, roles, administradores] = await Promise.all([
         pool.query(`SELECT COUNT(*) AS cantidad FROM dbo_docente`),
         pool.query(`SELECT COUNT(*) AS cantidad FROM dbo_alumno`),
+        pool.query(`SELECT COUNT(*) AS cantidad FROM dbo_grupo`),
+        pool.query(`SELECT COUNT(*) AS cantidad FROM dbo_inscripciones`),
         pool.query(`SELECT COUNT(*) AS cantidad FROM dbo_materias`),
         pool.query(`SELECT COUNT(*) AS cantidad FROM dbo_carrera`),
+        pool.query(`SELECT COUNT(*) AS cantidad FROM dbo_horario`),
+        pool.query(`SELECT COUNT(*) AS cantidad FROM dbo_plantel`),
         pool.query(`SELECT COUNT(*) AS cantidad FROM dbo_login_perfil`),
         pool.query(`SELECT COUNT(*) AS cantidad FROM dbo_usuario_perfil WHERE idPerfil = 1 OR idPerfil = 2`)
       ]);
@@ -40,8 +44,12 @@ exports.obtenerInicio = async (req, res) => {
       datosGenerales = {
         docentesRegistrados: Number(docentes[0].cantidad),
         estudiantesRegistrados: Number(estudiantes[0].cantidad),
+        gruposRegistrados: Number(grupos[0].cantidad),
+        inscripcionesRegistrados: Number(inscripciones[0].cantidad),
         materiasRegistradas: Number(materias[0].cantidad),
         carrerasRegistradas: Number(carreras[0].cantidad),
+        horariosRegistrados: Number(horarios[0].cantidad),
+        plantelesRegistrados: Number(planteles[0].cantidad),
         rolesRegistrados: Number(roles[0].cantidad),
         administradoresRegistrados: Number(administradores[0].cantidad)
       };

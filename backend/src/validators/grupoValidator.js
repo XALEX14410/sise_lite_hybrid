@@ -1,31 +1,61 @@
 const Joi = require('joi');
 
 const grupoSchema = Joi.object({
-  preido: Joi.string().min(3).max(100).required().messages({
-    'string.base': 'El periodo debe ser un texto',
-    'string.empty': 'El periodo es obligatorio',
-    'string.min': 'El nombre debe tener al menos 3 caracteres',
-    'any.required': 'El periodo es obligatorio'
-  }),
-  clave_grupo: Joi.string().min(3).max(100).required().messages({
-    'string.base': 'La clave de grupo debe ser un texto',
-    'string.empty': 'La clave de grupo es obligatoria',
-    'string.min': 'La clave debe tener al menos 3 caracteres',
-    'any.required': 'La clave de grupo es obligatoria'
-  }),
-  cupo: Joi.number().integer().min(1).max(10).required().messages({
-      'number.base': 'El cupo debe de ser un número',
-      'number.min': 'El cupo debe tener al menos 1 dígitos',
-      'any.required': 'El cupo es obligatorio'
+  periodo: Joi.string()
+    .pattern(/^[0-9]{4}-(A|B)$/)
+    .required()
+    .messages({
+      'string.base': 'El periodo debe ser texto.',
+      'string.empty': 'El periodo es obligatorio.',
+      'string.pattern.base': 'El formato del periodo no es válido. Ejemplo: 2025-A o 2025-B.',
+      'any.required': 'El campo periodo es obligatorio.'
     }),
-  idMateria: Joi.number().integer().required().messages({
-        'number.base': 'El id de la materia debe ser un número',
-        'any.required': 'El id de la materia es obligatorio'
+
+  clave_grupo: Joi.string()
+    .alphanum()
+    .min(2)
+    .max(10)
+    .required()
+    .messages({
+      'string.base': 'La clave del grupo debe ser texto alfanumérico.',
+      'string.empty': 'La clave del grupo es obligatoria.',
+      'string.min': 'La clave del grupo debe tener al menos 2 caracteres.',
+      'string.max': 'La clave del grupo no puede tener más de 10 caracteres.',
+      'any.required': 'El campo clave_grupo es obligatorio.'
     }),
-  idDocente: Joi.number().integer().required().messages({
-        'number.base': 'El id del docente debe ser un número',
-        'any.required': 'El id del docente es obligatorio'
-    }),  
+
+  cupo: Joi.number()
+    .integer()
+    .min(1)
+    .max(100)
+    .required()
+    .messages({
+      'number.base': 'El cupo debe ser un número.',
+      'number.integer': 'El cupo debe ser un número entero.',
+      'number.min': 'El cupo debe ser al menos 1.',
+      'number.max': 'El cupo no puede exceder los 100 alumnos.',
+      'any.required': 'El campo cupo es obligatorio.'
+    }),
+
+  idMateria: Joi.number()
+    .integer()
+    .positive()
+    .required()
+    .messages({
+      'number.base': 'El idMateria debe ser un número entero.',
+      'number.positive': 'El idMateria debe ser positivo.',
+      'any.required': 'El campo idMateria es obligatorio.'
+    }),
+
+  idDocente: Joi.number()
+    .integer()
+    .positive()
+    .required()
+    .messages({
+      'number.base': 'El idDocente debe ser un número entero.',
+      'number.positive': 'El idDocente debe ser positivo.',
+      'any.required': 'El campo idDocente es obligatorio.'
+    })
 });
 
-module.exports = {grupoSchema}
+module.exports = grupoSchema;

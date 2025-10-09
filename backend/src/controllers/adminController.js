@@ -47,7 +47,7 @@ exports.getAdminByID = async (req, res) => {
   }
 };
 
-exports.crearAdmin = async (req, res) => {
+exports.createAdmin = async (req, res) => {
   const {
     nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
     sexo, curp, idEstado, idMunicipio,
@@ -93,6 +93,92 @@ exports.crearAdmin = async (req, res) => {
     if (conn) await conn.rollback();
     console.error('Error al insertar admin:', err);
     res.status(500).json({ error: 'Error al insertar admin', detalle: err.message });
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
+exports.updateAdmin = async (req, res) => {
+  const {
+    idPersona,
+    idUsuario,
+    nombre,
+    apellido_paterno,
+    apellido_materno,
+    fecha_de_nacimiento,
+    sexo,
+    curp,
+    idEstado,
+    idMunicipio,
+    usuario,
+    contrasena,
+    correo_electronico
+  } = req.body;
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    await conn.beginTransaction();
+
+    // 1️⃣ Actualizar datos personales
+    await conn.query(
+      `UPDATE dbo_persona
+       SET nombre = ?, apellido_paterno = ?, apellido_materno = ?, fecha_de_nacimiento = ?,
+           sexo = ?, curp = ?, idEstado = ?, idMunicipio = ?
+       WHERE idPersona = ?`,
+      [nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio, idPersona]
+    );
+
+    // 2️⃣ Actualizar usuario
+    await conn.query(
+      `UPDATE dbo_usuario
+       SET usuario = ?, contrasena = ?, correo_electronico = ?
+       WHERE idUsuario = ?`,
+      [usuario, contrasena, correo_electronico, idUsuario]
+    );
+
+    await conn.commit();
+    res.json({ mensaje: 'Administrador actualizado correctamente' });
+
+  } catch (err) {
+    if (conn) await conn.rollback();
+    console.error('Error al actualizar admin:', err);
+    res.status(500).json({ error: 'Error al actualizar administrador', detalle: err.message });
+  } finally {
+    if (conn) conn.release();
+  }
+};
+
+exports.deleteAdmin = async (req, res) => {
+  const { idUsuario, idPersona } = req.body;
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    await conn.beginTransaction();
+
+    await conn.query(
+      `DELETE FROM dbo_usuario_perfil WHERE idUsuario = ?`,
+      [idUsuario]
+    );
+
+    await conn.query(
+      `DELETE FROM dbo_usuario WHERE idUsuario = ?`,
+      [idUsuario]
+    );
+
+    await conn.query(
+      `DELETE FROM dbo_persona WHERE idPersona = ?`,
+      [idPersona]
+    );
+
+    await conn.commit();
+    res.json({ mensaje: 'Administrador eliminado correctamente' });
+
+  } catch (err) {
+    if (conn) await conn.rollback();
+    console.error('Error al eliminar admin:', err);
+    res.status(500).json({ error: 'Error al eliminar administrador', detalle: err.message });
   } finally {
     if (conn) conn.release();
   }
