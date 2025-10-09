@@ -12,10 +12,10 @@ services:
     container_name: sise-lite-db
     # Define variables de entorno para la configuración de la base de datos.
     environment:
-      MARIADB_DATABASE: siselite
-#      MARIADB_USER: ${DB_USER}
- #     MARIADB_PASSWORD: ${DB_PASS}
-      MARIADB_ROOT_PASSWORD: root123
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASS}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASS}
     # Mapea el puerto del contenedor (3306) al puerto de tu máquina (3306).
     ports:
       - "3306:3306"
@@ -34,7 +34,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
-      API_PORT: 9000
+      API_PORT: 4000
     env_file:
       - ./backend/.env
     ports:
@@ -46,7 +46,7 @@ services:
   web:
     # Construye la imagen usando el Dockerfile que se encuentra en la carpeta './frontend'.
     build:
-      context: ./frontend1
+      context: ./frontend
     # Define variables de entorno para que el frontend se conecte al backend.
     environment:
       NEXT_PUBLIC_API_URL: http://api:4000  # Usa el nombre del servicio 'api' para la conexión.

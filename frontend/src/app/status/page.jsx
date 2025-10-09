@@ -20,9 +20,11 @@ export default function StatusPage() {
   }, []);
 
   return (
-    <main className="flex h-screen items-center justify-center bg-gray-100">
-      <div className="p-6 bg-white shadow-lg rounded-2xl">
-        <h1 className="text-2xl font-bold text-center">{status}</h1>
+    <main className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900">
+      <div className="p-6 bg-white dark:bg-gray-800 shadow-lg rounded-2xl">
+        <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-gray-100">
+          {status}
+        </h1>
       </div>
     </main>
   );
