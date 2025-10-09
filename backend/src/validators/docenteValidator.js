@@ -61,22 +61,31 @@ const docenteSchema = Joi.object({
   }),
 
   // ===== DATOS DE USUARIO =====
-  usuario: Joi.string().alphanum().min(4).max(20).required().messages({
-    'string.base': 'El usuario debe ser texto alfanumérico.',
-    'string.empty': 'El nombre de usuario es obligatorio.',
-    'string.min': 'El usuario debe tener al menos 4 caracteres.',
-    'string.max': 'El usuario no puede tener más de 20 caracteres.',
-    'any.required': 'El campo usuario es obligatorio.'
-  }),
-
-  contrasena: Joi.string().min(6).max(50).required().messages({
-    'string.base': 'La contraseña debe ser texto.',
-    'string.empty': 'La contraseña es obligatoria.',
-    'string.min': 'La contraseña debe tener al menos 6 caracteres.',
-    'string.max': 'La contraseña no puede superar los 50 caracteres.',
-    'any.required': 'El campo contrasena es obligatorio.'
-  }),
-
+  usuario: Joi.number()
+      .integer().required().custom((value, helpers) => {
+        if (value.toString().length !== 8) {
+          return helpers.error('number.length');
+        }
+        return value;
+      })
+      .messages({
+        'number.base': 'El usuario debe ser un número',
+        'number.length': 'El usuario debe tener exactamente 8 dígitos',
+        'any.required': 'El campo usuario es obligatorio'
+      }),
+  
+    contrasena: Joi.number().integer().required().custom((value, helpers) => {
+        if (value.toString().length !== 4) {
+          return helpers.error('number.length');
+        }
+        return value;
+      })
+      .messages({
+        'number.base': 'La contraseña debe ser un número',
+        'number.length': 'La contraseña debe tener exactamente 4 dígitos',
+        'any.required': 'El campo contraseña es obligatorio'
+      }),
+      
   correo_electronico: Joi.string().email().max(150).required().messages({
     'string.base': 'El correo electrónico debe ser texto.',
     'string.email': 'El formato del correo electrónico no es válido.',
