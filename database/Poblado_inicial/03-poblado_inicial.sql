@@ -89,7 +89,7 @@ INSERT INTO dbo_alumno (idUsuario, idCarrera, matricula, semestre_actual) VALUES
 -- Datos para dbo_grupo
 -- Se necesitan idDocente y idMateria, por lo que crearemos un grupo de ejemplo.
 -- Asumiremos que el idDocente es 1 (el único que hemos insertado)
-INSERT INTO dbo_grupo (idDocente, idMateria, preido, clave_grupo, cupo) VALUES
+INSERT INTO dbo_grupo (idDocente, idMateria, periodo, clave_grupo, cupo) VALUES
 (1, 1, '2025-2', 'SYS-101', 30);
 
 -- -----------------------------------------------------------------

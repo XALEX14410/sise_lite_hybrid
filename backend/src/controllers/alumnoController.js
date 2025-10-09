@@ -107,15 +107,42 @@ exports.getAllAlumnos = async (req, res) => {
 };
 
 exports.updateAlumno = async (req, res) => {
+  const { id } = req.params; 
   const {
-    idPersona, idUsuario,nombre,apellido_paterno,apellido_materno,fecha_de_nacimiento,
-    sexo,curp,idEstado,idMunicipio,usuario,contrasena,correo_electronico,matricula,semestre_actual,idCarrera
+    nombre,
+    apellido_paterno,
+    apellido_materno,
+    fecha_de_nacimiento,
+    sexo,
+    curp,
+    idEstado,
+    idMunicipio,
+    usuario,
+    contrasena,
+    correo_electronico,
+    matricula,
+    semestre_actual,
+    idCarrera
   } = req.body;
 
   let conn;
   try {
     conn = await pool.getConnection();
     await conn.beginTransaction();
+
+    const alumnoRows = await conn.query(
+      `SELECT a.idUsuario, u.idPersona 
+       FROM dbo_alumno a 
+       JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
+       WHERE a.idAlumno = ?`,
+      [id]
+    );
+
+    if (alumnoRows.length === 0) {
+      return res.status(404).json({ error: 'Alumno no encontrado' });
+    }
+
+    const { idUsuario, idPersona } = alumnoRows[0];
 
     await conn.query(
       `UPDATE dbo_persona
@@ -152,40 +179,58 @@ exports.updateAlumno = async (req, res) => {
   }
 };
 
+
 exports.deleteAlumno = async (req, res) => {
-  const { idUsuario, idPersona } = req.body;
+  const { id } = req.params; 
 
   let conn;
   try {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    // 1. Borrar relación de perfil
+    const alumnoRows = await conn.query(
+      `SELECT idUsuario FROM dbo_alumno WHERE idAlumno = ?`,
+      [id]
+    );
+
+    if (alumnoRows.length === 0) {
+      return res.status(404).json({ error: 'Alumno no encontrado' });
+    }
+
+    const idUsuario = alumnoRows[0].idUsuario;
+
+    const usuarioRows = await conn.query(
+      `SELECT idPersona FROM dbo_usuario WHERE idUsuario = ?`,
+      [idUsuario]
+    );
+
+    if (usuarioRows.length === 0) {
+      return res.status(404).json({ error: 'Usuario del alumno no encontrado' });
+    }
+
+    const idPersona = usuarioRows[0].idPersona;
+
     await conn.query(
       `DELETE FROM dbo_usuario_perfil WHERE idUsuario = ?`,
       [idUsuario]
     );
 
-    // 2. Borrar de alumno
     await conn.query(
-      `DELETE FROM dbo_alumno WHERE idUsuario = ?`,
-      [idUsuario]
+      `DELETE FROM dbo_alumno WHERE idAlumno = ?`,
+      [id]
     );
 
-    // 3. Borrar de usuario
     await conn.query(
       `DELETE FROM dbo_usuario WHERE idUsuario = ?`,
       [idUsuario]
     );
 
-    // 4. Borrar persona
     await conn.query(
       `DELETE FROM dbo_persona WHERE idPersona = ?`,
       [idPersona]
     );
 
     await conn.commit();
-
     res.json({ mensaje: 'Alumno eliminado correctamente' });
 
   } catch (err) {

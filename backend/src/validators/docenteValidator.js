@@ -1,7 +1,6 @@
 const Joi = require('joi');
 
 const docenteSchema = Joi.object({
-  // ===== DATOS PERSONALES =====
   nombre: Joi.string().min(2).max(100).required().messages({
     'string.base': 'El nombre debe ser texto.',
     'string.empty': 'El nombre es obligatorio.',
@@ -60,7 +59,6 @@ const docenteSchema = Joi.object({
     'any.required': 'El campo idMunicipio es obligatorio.'
   }),
 
-  // ===== DATOS DE USUARIO =====
   usuario: Joi.number()
       .integer().required().custom((value, helpers) => {
         if (value.toString().length !== 8) {

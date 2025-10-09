@@ -103,9 +103,8 @@ exports.createDocente = async (req, res) => {
 };
 
 exports.updateDocente = async (req, res) => {
+  const  idDocente  = req.params.id;
   const {
-    idPersona,
-    idUsuario,
     nombre,
     apellido_paterno,
     apellido_materno,
@@ -124,7 +123,30 @@ exports.updateDocente = async (req, res) => {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    // 1. Actualizar datos personales
+    // 1️⃣ Obtener el idUsuario asociado al docente
+    const docenteRows = await conn.query(
+      `SELECT idUsuario FROM dbo_docente WHERE idDocente = ?`,
+      [idDocente]
+    );
+
+    if (docenteRows.length === 0) {
+      return res.status(404).json({ error: 'Docente no encontrado' });
+    }
+
+    const idUsuario = docenteRows[0].idUsuario;
+
+    // 2️⃣ Obtener el idPersona asociado a ese usuario
+    const usuarioRows = await conn.query(
+      `SELECT idPersona FROM dbo_usuario WHERE idUsuario = ?`,
+      [idUsuario]
+    );
+
+    if (usuarioRows.length === 0) {
+      return res.status(404).json({ error: 'Usuario del docente no encontrado' });
+    }
+
+    const idPersona = usuarioRows[0].idPersona;
+
     await conn.query(
       `UPDATE dbo_persona
        SET nombre = ?, apellido_paterno = ?, apellido_materno = ?, fecha_de_nacimiento = ?,
@@ -133,7 +155,6 @@ exports.updateDocente = async (req, res) => {
       [nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio, idPersona]
     );
 
-    // 2. Actualizar usuario
     await conn.query(
       `UPDATE dbo_usuario
        SET usuario = ?, contrasena = ?, correo_electronico = ?
@@ -153,33 +174,54 @@ exports.updateDocente = async (req, res) => {
   }
 };
 
+
 exports.deleteDocente = async (req, res) => {
-  const { idUsuario, idPersona } = req.body;
+  const { id } = req.params; // idDocente
 
   let conn;
   try {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    // 1. Eliminar relación de perfil
+    // 1️⃣ Obtener el idUsuario asociado al docente
+    const docenteRows = await conn.query(
+      `SELECT idUsuario FROM dbo_docente WHERE idDocente = ?`,
+      [id]
+    );
+
+    if (docenteRows.length === 0) {
+      return res.status(404).json({ error: 'Docente no encontrado' });
+    }
+
+    const idUsuario = docenteRows[0].idUsuario;
+
+    // 2️⃣ Obtener el idPersona asociado al usuario
+    const usuarioRows = await conn.query(
+      `SELECT idPersona FROM dbo_usuario WHERE idUsuario = ?`,
+      [idUsuario]
+    );
+
+    if (usuarioRows.length === 0) {
+      return res.status(404).json({ error: 'Usuario del docente no encontrado' });
+    }
+
+    const idPersona = usuarioRows[0].idPersona;
+
     await conn.query(
       `DELETE FROM dbo_usuario_perfil WHERE idUsuario = ?`,
       [idUsuario]
     );
 
-    // 2. Eliminar registro en docente
     await conn.query(
-      `DELETE FROM dbo_docente WHERE idUsuario = ?`,
-      [idUsuario]
+      `DELETE FROM dbo_docente WHERE idDocente = ?`,
+      [id]
     );
 
-    // 3. Eliminar usuario
     await conn.query(
       `DELETE FROM dbo_usuario WHERE idUsuario = ?`,
       [idUsuario]
     );
 
-    // 4. Eliminar persona
     await conn.query(
       `DELETE FROM dbo_persona WHERE idPersona = ?`,
       [idPersona]

@@ -95,13 +95,13 @@ exports.createAdmin = async (req, res) => {
     res.status(500).json({ error: 'Error al insertar admin', detalle: err.message });
   } finally {
     if (conn) conn.release();
+    
   }
 };
 
 exports.updateAdmin = async (req, res) => {
+  const { id } = req.params; 
   const {
-    idPersona,
-    idUsuario,
     nombre,
     apellido_paterno,
     apellido_materno,
@@ -120,7 +120,20 @@ exports.updateAdmin = async (req, res) => {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    // 1️⃣ Actualizar datos personales
+    const usuarioRows = await conn.query(
+      `SELECT u.idUsuario, u.idPersona
+       FROM dbo_usuario u
+       JOIN dbo_usuario_perfil up ON u.idUsuario = up.idUsuario
+       WHERE u.idUsuario = ? AND up.idPerfil = 2`,
+      [id]
+    );
+
+    if (usuarioRows.length === 0) {
+      return res.status(404).json({ error: 'Administrador no encontrado' });
+    }
+
+    const { idUsuario, idPersona } = usuarioRows[0];
+
     await conn.query(
       `UPDATE dbo_persona
        SET nombre = ?, apellido_paterno = ?, apellido_materno = ?, fecha_de_nacimiento = ?,
@@ -129,7 +142,6 @@ exports.updateAdmin = async (req, res) => {
       [nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento, sexo, curp, idEstado, idMunicipio, idPersona]
     );
 
-    // 2️⃣ Actualizar usuario
     await conn.query(
       `UPDATE dbo_usuario
        SET usuario = ?, contrasena = ?, correo_electronico = ?
@@ -150,12 +162,26 @@ exports.updateAdmin = async (req, res) => {
 };
 
 exports.deleteAdmin = async (req, res) => {
-  const { idUsuario, idPersona } = req.body;
+  const { id } = req.params; 
 
   let conn;
   try {
     conn = await pool.getConnection();
     await conn.beginTransaction();
+
+    const usuarioRows = await conn.query(
+      `SELECT u.idUsuario, u.idPersona
+       FROM dbo_usuario u
+       JOIN dbo_usuario_perfil up ON u.idUsuario = up.idUsuario
+       WHERE u.idUsuario = ? AND up.idPerfil = 2`,
+      [id]
+    );
+
+    if (usuarioRows.length === 0) {
+      return res.status(404).json({ error: 'Administrador no encontrado' });
+    }
+
+    const { idUsuario, idPersona } = usuarioRows[0];
 
     await conn.query(
       `DELETE FROM dbo_usuario_perfil WHERE idUsuario = ?`,
