@@ -44,7 +44,7 @@ exports.createCarrera = async (req, res) => {
     const result = await pool.query(`
       INSERT INTO dbo_carrera (carrera, duracion_semestres, descripcion, idPlantel)
       VALUES (?, ?, ?, ?)
-    `, [carrera, duracion_semestres, descripcion || null, idPlantel]);
+    `, [carrera, duracion_semestres, descripcion, idPlantel]);
 
     res.json({ mensaje: 'Carrera creada correctamente', idCarrera: Number(result.insertId)});
   } catch (err) {
@@ -62,7 +62,7 @@ exports.updateCarrera = async (req, res) => {
       UPDATE dbo_carrera
       SET carrera = ?, duracion_semestres = ?, descripcion = ?, idPlantel = ?
       WHERE idCarrera = ?
-    `, [carrera, duracion_semestres, descripcion || null, idPlantel, idCarrera]);
+    `, [carrera, duracion_semestres, descripcion, idPlantel, idCarrera]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Carrera no encontrada' });

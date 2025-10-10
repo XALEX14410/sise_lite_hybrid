@@ -27,6 +27,14 @@ services:
   api:
     build:
       context: ./backend
+    # Define variables de entorno para que el backend se conecte a la base de datos.
+    environment:
+      DB_HOST: db      # Usa el nombre del servicio 'db' para la conexión.
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      API_PORT: 4000
     env_file:
       - ./backend/.env
     ports:

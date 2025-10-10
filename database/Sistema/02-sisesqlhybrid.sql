@@ -6,7 +6,7 @@ CREATE TABLE dbo_login_perfil (idPerfil int(10) NOT NULL AUTO_INCREMENT, nombre 
 CREATE TABLE dbo_plantel (idPlantel int(10) NOT NULL AUTO_INCREMENT, idMunicipio int(10) NOT NULL, idEstado int(10) NOT NULL, nombre_plantel varchar(100), PRIMARY KEY (idPlantel));
 CREATE TABLE dbo_carga_academica (idCargaAcademica int(10) NOT NULL AUTO_INCREMENT, idMateria int(10) NOT NULL, SC int(10), `AS` int(10), EGC int(10), creditos tinyint, RC int(10), Grupo varchar(255), PRIMARY KEY (idCargaAcademica)) comment='SC: Sobrecarga     AS: Asesoría     RC: Repite Curso     EGC: Examen General De Conocimientos     COR: Plantel Córdoba     ORI: Plantel Orizaba     ';
 CREATE TABLE dbo_horario (idHorario int(10) NOT NULL AUTO_INCREMENT, dia_semana varchar(10), hora time, aula varchar(255), idGrupo int(10) NOT NULL, PRIMARY KEY (idHorario));
-CREATE TABLE dbo_carrera (idCarrera int(10) NOT NULL AUTO_INCREMENT, carrera varchar(50), duracion_semestres tinyint, descripcion varchar(255), idPlantel int(10) NOT NULL, `Column` int(10), PRIMARY KEY (idCarrera));
+CREATE TABLE dbo_carrera (idCarrera int(10) NOT NULL AUTO_INCREMENT, carrera varchar(100), duracion_semestres tinyint, descripcion varchar(255), idPlantel int(10) NOT NULL, `Column` int(10), PRIMARY KEY (idCarrera));
 CREATE TABLE dbo_menu_valido (id_menu int(10) NOT NULL AUTO_INCREMENT, nombre varchar(255), tipo int(10) comment 'enum(''gestor'', ''formulario'', ''otro'', ''observar'')', fecha_creacion time comment 'Fecha y hora de creación del registro del menú.', fecha_actualizacion time comment 'Fecha y hora de la última actualización del registro del menú.', acceso varchar(20) comment 'Ejemplo de uso
  [1,2] superadmin, admin
 
@@ -21,7 +21,7 @@ Etc', PRIMARY KEY (idPago));
 CREATE TABLE dbo_becas (idBeca int(10) NOT NULL AUTO_INCREMENT, PRIMARY KEY (idBeca));
 CREATE TABLE dbo_usuario_perfil (idPerfil_Usuario int(10) NOT NULL AUTO_INCREMENT, idUsuario int(10) NOT NULL, idPerfil int(10) NOT NULL, PRIMARY KEY (idPerfil_Usuario));
 CREATE TABLE dbo_alumno (idAlumno int(10) NOT NULL AUTO_INCREMENT, idUsuario int(10) NOT NULL, idCarrera int(10) NOT NULL, matricula varchar(255), semestre_actual varchar(255), PRIMARY KEY (idAlumno));
-CREATE TABLE dbo_grupo (idGrupo int(10) NOT NULL AUTO_INCREMENT, idDocente int(10) NOT NULL, idMateria int(10) NOT NULL, preido varchar(255), clave_grupo varchar(255), cupo int(10), PRIMARY KEY (idGrupo));
+CREATE TABLE dbo_grupo (idGrupo int(10) NOT NULL AUTO_INCREMENT, idDocente int(10) NOT NULL, idMateria int(10) NOT NULL, periodo varchar(255), clave_grupo varchar(255), cupo int(10), PRIMARY KEY (idGrupo));
 CREATE TABLE dbo_calificaciones (idCalificación int(10) NOT NULL AUTO_INCREMENT, idInscripción int(10) NOT NULL, valor int(100), observaciones varchar(255), PRIMARY KEY (idCalificación));
 CREATE TABLE dbo_inscripciones (idInscripción int(10) NOT NULL AUTO_INCREMENT, idAlumno int(10) NOT NULL, idGrupo int(10) NOT NULL, PRIMARY KEY (idInscripción));
 ALTER TABLE dbo_usuario ADD CONSTRAINT FKdbo_usuari129210 FOREIGN KEY (idPersona) REFERENCES dbo_persona (idPersona);
