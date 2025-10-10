@@ -79,12 +79,12 @@ INSERT INTO dbo_docente (idUsuario) VALUES (3); -- El usuario con id=3 es el doc
 
 -- Datos para dbo_alumno
 INSERT INTO dbo_alumno (idUsuario, idCarrera, matricula, semestre_actual) VALUES
-(4, 1, '22103001', '1'), -- Joseph Emiliano Ruano Galvez
-(5, 1, '22103002', '1'), -- Alexis Emmanuel Fernandez Gonzalez
-(6, 1, '22103003', '1'), -- Pedro Pablo Mora Flores
-(7, 1, '22103004', '1'), -- Daniel de Jesus Nogales Escalona
-(8, 1, '22103005', '1'), -- Jesus Alejandro Lara Castro
-(9, 1, '22103007', '1'); -- Claudio Carrera Hernandez
+(4, 1, '22103001', '9'), -- Joseph Emiliano Ruano Galvez
+(5, 1, '22103002', '9'), -- Alexis Emmanuel Fernandez Gonzalez
+(6, 1, '22103003', '9'), -- Pedro Pablo Mora Flores
+(7, 1, '22103004', '9'), -- Daniel de Jesus Nogales Escalona
+(8, 1, '22103005', '9'), -- Jesus Alejandro Lara Castro
+(9, 1, '22103007', '9'); -- Claudio Carrera Hernandez
 
 -- Datos para dbo_grupo
 -- Se necesitan idDocente y idMateria, por lo que crearemos un grupo de ejemplo.
