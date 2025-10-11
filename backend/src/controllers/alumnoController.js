@@ -241,3 +241,37 @@ exports.deleteAlumno = async (req, res) => {
     if (conn) conn.release();
   }
 };
+
+exports.getCalificacionesAlumno = async (req, res) => {
+  const { id } = req.params; // ✅ Correcto
+
+  try {
+    const conn = await pool.getConnection();
+
+    const rows = await conn.query(`
+      SELECT 
+        m.nombre_materia AS materia,
+        g.clave_grupo AS grupo,
+        c.valor AS calificacion,
+        c.observaciones
+      FROM dbo_calificaciones c
+      INNER JOIN dbo_inscripciones i ON c.idInscripción = i.idInscripción
+      INNER JOIN dbo_alumno a ON i.idAlumno = a.idAlumno
+      INNER JOIN dbo_grupo g ON i.idGrupo = g.idGrupo
+      INNER JOIN dbo_materias m ON g.idMateria = m.idMateria
+      WHERE a.idUsuario = ?
+    `, [id]);
+
+    conn.release();
+
+    if (rows.length === 0) {
+      return res.status(404).json({ mensaje: 'No se encontraron calificaciones para este alumno' });
+    }
+
+    res.json({ calificaciones: rows });
+  } catch (err) {
+    console.error('Error al obtener calificaciones del alumno:', err);
+    res.status(500).json({ error: 'Error interno del servidor', detalle: err.message });
+  }
+};
+
