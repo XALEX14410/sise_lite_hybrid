@@ -4,7 +4,7 @@ exports.getEstados = async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-    const rows = await conn.query(`SELECT * FROM dbo_estado`);
+    const rows = await conn.query(`SELECT * FROM dbo_estados`);
     res.json(rows);
   } catch (err) {
     console.error('Error al obtener estados:', err);
