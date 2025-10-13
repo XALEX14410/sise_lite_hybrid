@@ -99,11 +99,13 @@ exports.getDatosPersonales = async (req, res) => {
     const datos = await pool.query(
       `SELECT u.idUsuario, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
        DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
-       p.sexo, p.curp, m.municipio, e.estado
+       p.sexo, p.curp, m.municipio, e.estado, lp.nombre AS perfil
        FROM dbo_usuario u
+        LEFT JOIN dbo_usuario_perfil up ON u.idUsuario = up.idUsuario
        INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
        INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
        INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
+       LEFT JOIN dbo_login_perfil lp ON up.idPerfil = lp.idPerfil
        WHERE u.idUsuario = ?`,
       [usuarioSesion.idUsuario]
     );
@@ -123,6 +125,7 @@ exports.getDatosPersonales = async (req, res) => {
         nombre: perfil.nombre,
         apellidos: apellidoCompleto,
         usuario: perfil.usuario,
+        perfil: perfil.perfil,
         correo: perfil.correo_electronico,
         fechaNacimiento: perfil.fechaNacimiento,
         sexo: perfil.sexo,
