@@ -33,11 +33,6 @@ exports.obtenerInscripcionesporId = async (req, res) => {
 
 exports.registrarInscripcion = async (req, res) => {
   const { idAlumno, idGrupo } = req.body;
-
-  if (!idAlumno || !idGrupo) {
-    return res.status(400).json({ error: 'Faltan datos para la inscripción' });
-  }
-
   try {
     const idInscripcion = await Inscripcion.create({ idAlumno, idGrupo });
 
@@ -57,12 +52,6 @@ exports.registrarInscripcion = async (req, res) => {
 
 exports.actualizarInscripcion = async (req, res) => {
   const idInscripcion = req.params.id;
-  const { idAlumno, idGrupo } = req.body;
-
-  if (!idAlumno || !idGrupo) {
-    return res.status(400).json({ error: 'Faltan datos para actualizar la inscripción' });
-  }
-
   try {
     const affected = await Inscripcion.update(idInscripcion, { idAlumno, idGrupo });
 

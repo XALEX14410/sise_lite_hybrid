@@ -33,11 +33,6 @@ exports.obtenerHorarioporId = async (req, res) => {
 
 exports.registrarHorario = async (req, res) => {
   const { dia_semana, hora, aula, idGrupo } = req.body;
-
-  if (!dia_semana || !hora || !aula || !idGrupo) {
-    return res.status(400).json({ error: 'Faltan datos para crear el horario' });
-  }
-
   try {
     const idHorario = await Horario.create({ dia_semana, hora, aula, idGrupo });
     res.json({
@@ -52,12 +47,6 @@ exports.registrarHorario = async (req, res) => {
 
 exports.actualizarHorario = async (req, res) => {
   const idHorario = req.params.id;
-  const { dia_semana, hora, aula } = req.body;
-
-  if (!dia_semana || !hora || !aula) {
-    return res.status(400).json({ error: 'Faltan datos para actualizar el horario' });
-  }
-
   try {
     const affected = await Horario.update(idHorario, { dia_semana, hora, aula });
 
@@ -74,7 +63,6 @@ exports.actualizarHorario = async (req, res) => {
 
 exports.eliminarHorario = async (req, res) => {
   const idHorario = req.params.id;
-
   try {
     const affected = await Horario.remove(idHorario);
 

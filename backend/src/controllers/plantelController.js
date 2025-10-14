@@ -12,7 +12,6 @@ exports.obtenerPlantel = async (req, res) => {
 
 exports.obtenerPlantelporID = async (req, res) => {
   const id = req.params.id;
-
   try {
     const plantel = await Plantel.getById(id);
     if (!plantel) {
@@ -26,12 +25,6 @@ exports.obtenerPlantelporID = async (req, res) => {
 };
 
 exports.registrarPlantel = async (req, res) => {
-  const { nombre_plantel, idEstado, idMunicipio } = req.body;
-
-  if (!nombre_plantel || !idEstado || !idMunicipio) {
-    return res.status(400).json({ error: 'Faltan datos obligatorios del plantel' });
-  }
-
   try {
     const idPlantel = await Plantel.create({ nombre_plantel, idEstado, idMunicipio });
     res.status(201).json({ mensaje: 'Plantel creado correctamente', idPlantel: Number(idPlantel) });
@@ -43,8 +36,6 @@ exports.registrarPlantel = async (req, res) => {
 
 exports.actualizarPlantel = async (req, res) => {
   const id = req.params.id;
-  const { nombre_plantel, idEstado, idMunicipio } = req.body;
-
   try {
     const updated = await Plantel.update(id, { nombre_plantel, idEstado, idMunicipio });
     if (updated === 0) {
@@ -59,7 +50,6 @@ exports.actualizarPlantel = async (req, res) => {
 
 exports.eliminarPlantel = async (req, res) => {
   const id = req.params.id;
-
   try {
     const deleted = await Plantel.remove(id);
     if (deleted === 0) {

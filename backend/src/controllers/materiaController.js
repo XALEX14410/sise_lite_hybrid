@@ -23,12 +23,6 @@ exports.obtenerMateriaPorId = async (req, res) => {
 };
 
 exports.registrarMateria = async (req, res) => {
-  const { idCarrera, nombre_materia, semestre, descripcion, creditos } = req.body;
-
-  if (!idCarrera || !nombre_materia || !semestre || !descripcion || !creditos) {
-    return res.status(400).json({ error: 'Faltan datos para registrar la materia' });
-  }
-
   try {
     const idMateria = await Materia.create({ idCarrera, nombre_materia, semestre, descripcion, creditos });
     res.status(201).json({ mensaje: 'Materia creada correctamente', idMateria });
@@ -40,12 +34,6 @@ exports.registrarMateria = async (req, res) => {
 
 exports.actualizarMateria = async (req, res) => {
   const id = req.params.id;
-  const { idCarrera, nombre_materia, semestre, descripcion, creditos } = req.body;
-
-  if (!idCarrera || !nombre_materia || !semestre || !descripcion || !creditos) {
-    return res.status(400).json({ error: 'Faltan datos para actualizar la materia' });
-  }
-
   try {
     const affectedRows = await Materia.update(id, { idCarrera, nombre_materia, semestre, descripcion, creditos });
     if (!affectedRows) return res.status(404).json({ error: 'Materia no encontrada' });

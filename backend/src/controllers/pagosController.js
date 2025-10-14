@@ -26,12 +26,6 @@ exports.obtenerPagoporID = async (req, res) => {
 };
 
 exports.registrarPago = async (req, res) => {
-  const { idBeca, idUsuario, cantidad_a_pagar, fecha_de_pago, estado} = req.body;
-
-  if (!idBeca || !idUsuario || !cantidad_a_pagar || !fecha_de_pago || !estado) {
-    return res.status(400).json({ error: 'Faltan datos obligatorios del pago' });
-  }
-
   try {
     const idPlantel = await Plantel.create({ nombre_plantel, idEstado, idMunicipio });
     res.status(201).json({ mensaje: 'Pago registrado correctamente', idPlantel: Number(idPlantel) });
@@ -43,8 +37,6 @@ exports.registrarPago = async (req, res) => {
 
 exports.actualizarPago = async (req, res) => {
   const id = req.params.id;
-  const { idBeca, idUsuario, cantidad_a_pagar, fecha_de_pago, estado } = req.body;
-
   try {
     const updated = await Pago.update(id, { idBeca, idUsuario, cantidad_a_pagar, fecha_de_pago, estado });
     if (updated === 0) {
@@ -59,7 +51,6 @@ exports.actualizarPago = async (req, res) => {
 
 exports.eliminarPago = async (req, res) => {
   const id = req.params.id;
-
   try {
     const deleted = await Pago.remove(id);
     if (deleted === 0) {

@@ -23,12 +23,6 @@ exports.obtenerGrupoPorId = async (req, res) => {
 };
 
 exports.registrarGrupo = async (req, res) => {
-  const { periodo, clave_grupo, cupo, idMateria, idDocente } = req.body;
-
-  if (!periodo || !clave_grupo || !cupo || !idMateria || !idDocente) {
-    return res.status(400).json({ error: 'Faltan datos del grupo' });
-  }
-
   try {
     const idGrupo = await Grupo.create({ periodo, clave_grupo, cupo, idMateria, idDocente });
     res.status(201).json({ mensaje: 'Grupo creado correctamente', idGrupo });
@@ -40,12 +34,6 @@ exports.registrarGrupo = async (req, res) => {
 
 exports.actualizarGrupo = async (req, res) => {
   const id = req.params.id;
-  const { periodo, clave_grupo, cupo, idMateria, idDocente } = req.body;
-
-  if (!periodo || !clave_grupo || !cupo || !idMateria || !idDocente) {
-    return res.status(400).json({ error: 'Faltan datos para actualizar el grupo' });
-  }
-
   try {
     const affectedRows = await Grupo.update(id, { periodo, clave_grupo, cupo, idMateria, idDocente });
     if (!affectedRows) return res.status(404).json({ error: 'Grupo no encontrado' });
