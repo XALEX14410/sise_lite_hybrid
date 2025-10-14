@@ -137,4 +137,19 @@ const remove = async (idDocente) => {
   }
 };
 
-module.exports = { getAll, getById, create, update, remove };
+const getGruposByDocente = async (idDocente) => {
+  const rows = await pool.query(
+    `SELECT g.*, m.nombre_materia, m.creditos, m.semestre,
+            COUNT(DISTINCT i.idAlumno) AS alumnos_inscritos
+     FROM dbo_grupo g
+     INNER JOIN dbo_materias m ON g.idMateria = m.idMateria
+     LEFT JOIN dbo_inscripciones i ON g.idGrupo = i.idGrupo
+     WHERE g.idDocente = ?
+     GROUP BY g.idGrupo
+     ORDER BY g.periodo DESC`,
+    [idDocente]
+  );
+  return rows;
+};
+
+module.exports = { getAll, getById, create, update, remove, getGruposByDocente };

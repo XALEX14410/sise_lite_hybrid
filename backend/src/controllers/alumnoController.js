@@ -66,23 +66,18 @@ exports.obtenerCalificacionesPorAlumno = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const calificaciones = await pool.query(
-      `SELECT c.*, m.nombre_materia, m.creditos, g.periodo, g.clave_grupo
-       FROM dbo_calificaciones c
-       INNER JOIN dbo_inscripciones i ON c.idInscripción = i.idInscripción
-       INNER JOIN dbo_grupo g ON i.idGrupo = g.idGrupo
-       INNER JOIN dbo_materias m ON g.idMateria = m.idMateria
-       WHERE i.idAlumno = ?
-       ORDER BY g.periodo DESC`,
-      [id]
-    );
+    const calificaciones = await Alumno.getCalificaciones(id);
 
     if (calificaciones.length === 0) {
       return res.status(404).json({ mensaje: 'No hay calificaciones disponibles' });
     }
 
-    res.json(calificaciones);
+    res.json({ calificaciones });
   } catch (error) {
-    res.status(500).json({ mensaje: 'Error al obtener calificaciones del alumno', error: error.message });
+    console.error('Error al obtener calificaciones del alumno:', error);
+    res.status(500).json({
+      mensaje: 'Error al obtener calificaciones del alumno',
+      detalle: error.message,
+    });
   }
 };

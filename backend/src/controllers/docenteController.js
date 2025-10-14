@@ -70,26 +70,20 @@ exports.eliminarDocente = async (req, res) => {
 
 exports.obtenerGruposDocente = async (req, res) => {
   const { id } = req.params;
-  
+
   try {
-    const grupos = await pool.query(
-      `SELECT g.*, m.nombre_materia, m.creditos, m.semestre,
-       COUNT(DISTINCT i.idAlumno) as alumnos_inscritos
-       FROM dbo_grupo g
-       INNER JOIN dbo_materias m ON g.idMateria = m.idMateria
-       LEFT JOIN dbo_inscripciones i ON g.idGrupo = i.idGrupo
-       WHERE g.idDocente = ?
-       GROUP BY g.idGrupo
-       ORDER BY g.periodo DESC`,
-      [id]
-    );
-    
+    const grupos = await Docente.getGruposByDocente(id);
+
     if (grupos.length === 0) {
       return res.status(404).json({ mensaje: 'No hay grupos disponibles' });
     }
 
-    res.json(grupos);
-  } catch (error) {
-    res.status(500).json({ mensaje: 'Error al obtener grupos del docente', error: error.message });
+    res.json({ grupos });
+  } catch (err) {
+    console.error('Error al obtener grupos del docente:', err);
+    res.status(500).json({
+      mensaje: 'Error al obtener grupos del docente',
+      detalle: err.message,
+    });
   }
 };

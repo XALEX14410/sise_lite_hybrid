@@ -177,4 +177,18 @@ const remove = async (idAlumno) => {
   }
 };
 
-module.exports = { getAll, getById, create, update, remove };
+const getCalificaciones = async (id) => {
+  const rows = await pool.query(
+    `SELECT c.*, m.nombre_materia, m.creditos, g.periodo, g.clave_grupo
+     FROM dbo_calificaciones c
+     INNER JOIN dbo_inscripciones i ON c.idInscripción = i.idInscripción
+     INNER JOIN dbo_grupo g ON i.idGrupo = g.idGrupo
+     INNER JOIN dbo_materias m ON g.idMateria = m.idMateria
+     WHERE i.idAlumno = ?
+     ORDER BY g.periodo DESC`,
+    [id]
+  );
+  return rows;
+};
+
+module.exports = { getAll, getById, create, update, remove, getCalificaciones };
