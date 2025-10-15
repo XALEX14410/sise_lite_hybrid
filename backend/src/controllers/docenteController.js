@@ -1,7 +1,10 @@
 const pool = require('../db/pool');
 
-exports.getAllDocentes = async (req, res) => {
+const Docente = require('../models/docenteModel');
+
+exports.obtenerDocentes = async (req, res) => {
   try {
+<<<<<<< HEAD
     const rows = await pool.query(`
       SELECT d.idDocente, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
        DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
@@ -13,12 +16,17 @@ exports.getAllDocentes = async (req, res) => {
        INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
     `);
     res.json({ docentes: rows });
+=======
+    const docentes = await Docente.getAll();
+    res.json({ docentes });
+>>>>>>> backend
   } catch (err) {
     console.error('Error al obtener docentes:', err);
     res.status(500).json({ error: 'Error al consultar docentes', detalle: err.message });
   }
 };
 
+<<<<<<< HEAD
 exports.getDocenteByID = async (req, res) => {
   const idDocente = req.params.id; 
   try {
@@ -238,3 +246,80 @@ exports.deleteDocente = async (req, res) => {
     if (conn) conn.release();
   }
 };
+=======
+exports.obtenerDocentePorId = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const docente = await Docente.getById(id);
+    if (!docente) return res.status(404).json({ error: 'Docente no encontrado' });
+    res.json({ docente });
+  } catch (err) {
+    console.error('Error al obtener docente:', err);
+    res.status(500).json({ error: 'Error al consultar docente', detalle: err.message });
+  }
+};
+
+exports.registrarDocente = async (req, res) => {
+  const {
+    nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
+    sexo, curp, idEstado, idMunicipio,
+    usuario, contrasena, correo_electronico
+  } = req.body;
+
+  try {
+    const result = await Docente.create({
+      nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
+      sexo, curp, idEstado, idMunicipio,
+      usuario, contrasena, correo_electronico
+    });
+    res.status(201).json({ mensaje: 'Docente creado correctamente', docente: result });
+  } catch (err) {
+    console.error('Error al crear docente:', err);
+    res.status(500).json({ error: 'Error al insertar docente', detalle: err.message });
+  }
+};
+
+exports.actualizarDocente = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const updated = await Docente.update(id, req.body);
+    if (!updated) return res.status(404).json({ error: 'Docente no encontrado' });
+    res.json({ mensaje: 'Docente actualizado correctamente' });
+  } catch (err) {
+    console.error('Error al actualizar docente:', err);
+    res.status(500).json({ error: 'Error al actualizar docente', detalle: err.message });
+  }
+};
+
+exports.eliminarDocente = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const deleted = await Docente.remove(id);
+    if (!deleted) return res.status(404).json({ error: 'Docente no encontrado' });
+    res.json({ mensaje: 'Docente eliminado correctamente' });
+  } catch (err) {
+    console.error('Error al eliminar docente:', err);
+    res.status(500).json({ error: 'Error al eliminar docente', detalle: err.message });
+  }
+};
+
+exports.obtenerGruposDocente = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const grupos = await Docente.getGruposByDocente(id);
+
+    if (grupos.length === 0) {
+      return res.status(404).json({ mensaje: 'No hay grupos disponibles' });
+    }
+
+    res.json({ grupos });
+  } catch (err) {
+    console.error('Error al obtener grupos del docente:', err);
+    res.status(500).json({
+      mensaje: 'Error al obtener grupos del docente',
+      detalle: err.message,
+    });
+  }
+};
+>>>>>>> backend

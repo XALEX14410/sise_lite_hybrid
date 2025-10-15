@@ -1,10 +1,18 @@
 const express = require('express');
 const cors = require("cors");
+<<<<<<< HEAD
 const morgan = require("morgan");
 const pool = require('./src/db/pool');
 const session = require('express-session');
 
 require('dotenv').config();
+=======
+const morgan = require('morgan');
+const session = require('express-session');
+const pool = require('./src/db/pool');
+require('dotenv').config();
+
+>>>>>>> backend
 const app = express();
 
 app.use(cors({
@@ -14,8 +22,13 @@ app.use(cors({
 
 
 const loginRoutes = require('./src/routes/loginRoutes');
+<<<<<<< HEAD
 //const alumnoRoutes = require('./src/routes/alumnoRoutes');
 //const docenteRoutes = require('./src/routes/docenteRoutes');
+=======
+const alumnoRoutes = require('./src/routes/alumnoRoutes');
+const docenteRoutes = require('./src/routes/docenteRoutes');
+>>>>>>> backend
 const municipiosRoutes = require('./src/routes/municipiosRoutes');
 const estadosRoutes = require('./src/routes/estadosRoutes');
 const inicioRouter = require('./src/routes/inicioRoutes');
@@ -38,18 +51,28 @@ app.use(session({
 
 app.use('/admin', adminRoutes);
 app.use('/auth', loginRoutes);
+<<<<<<< HEAD
 //app.use('/docente', docenteRoutes);
 //app.use('/alumno', alumnoRoutes);
 app.use('/municipios', municipiosRoutes);
 app.use('/estados', estadosRoutes);
 app.use('/inicio', inicioRouter);
 app.use('/inicio', inicioRouter);
+=======
+app.use('/docente', docenteRoutes);
+app.use('/alumno', alumnoRoutes);
+app.use('/municipios', municipiosRoutes);
+app.use('/estados', estadosRoutes);
+app.use('/inicio', inicioRouter);
+>>>>>>> backend
 
 app.get('/api/status', (req, res) => {
   res.json({ message: 'Backend funcionando' });
 });
 
 const PORT = process.env.PORT || 4000;
+
 app.listen(PORT, () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });

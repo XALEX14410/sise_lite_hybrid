@@ -1,26 +1,17 @@
-const pool = require('../db/pool');
+const AuthModel = require('../models/authModel');
 
-//Ya tiene validaciones /authvalidator
 exports.login = async (req, res) => {
   const { usuario, contrasena } = req.body;
 
   try {
-    const rows = await pool.query(
-      `SELECT u.idUsuario, u.usuario, u.contrasena, lp.nombre AS perfil
-       FROM dbo_usuario u
-       LEFT JOIN dbo_usuario_perfil up ON u.idUsuario = up.idUsuario
-       LEFT JOIN dbo_login_perfil lp ON up.idPerfil = lp.idPerfil
-       WHERE u.usuario = ? AND u.contrasena = ?`,
-      [usuario, contrasena]
-    );
-
-    const user = rows[0]; 
-    if (!user) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
+    const user = await AuthModel.findUser(usuario, contrasena);
+    if (!user) return res.status(401).json({ error: 'Credenciales inválidas' });
 
     let idEntidad = null;
+    if (user.perfil === 'Docente') idEntidad = await AuthModel.getDocenteByUserId(user.idUsuario);
+    if (user.perfil === 'Alumno') idEntidad = await AuthModel.getAlumnoByUserId(user.idUsuario);
 
+<<<<<<< HEAD
     if (user.perfil === 'Docente') {
       const docenteRows = await pool.query('SELECT idDocente FROM dbo_docente WHERE idUsuario = ?', [user.idUsuario]);
       idEntidad = docenteRows[0]?.idDocente;
@@ -44,6 +35,11 @@ exports.login = async (req, res) => {
         perfil: user.perfil || 'Sin perfil asignado'
       }
     });
+=======
+    req.session.usuario = { idUsuario: user.idUsuario, idEntidad, usuario: user.usuario, perfil: user.perfil };
+
+    res.json({ mensaje: 'Login exitoso', usuario: { id: user.idUsuario, usuario: user.usuario, perfil: user.perfil } });
+>>>>>>> backend
   } catch (err) {
     console.error('Error en login:', err);
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -52,10 +48,7 @@ exports.login = async (req, res) => {
 
 exports.logout = (req, res) => {
   req.session.destroy(err => {
-    if (err) {
-      return res.status(500).json({ error: 'Error al cerrar sesión' });
-    }
-    res.clearCookie('connect.sid');
+    if (err) return res.status(500).json({ error: 'Error al cerrar sesión' });
     res.clearCookie('connect.sid');
     res.json({ mensaje: 'Sesión cerrada correctamente' });
   });
@@ -63,8 +56,7 @@ exports.logout = (req, res) => {
 
 exports.getRoles = async (req, res) => {
   try {
-    const rows = await pool.query('SELECT nombre FROM dbo_login_perfil');
-    const roles = rows.map(r => r.nombre);
+    const roles = await AuthModel.getRoles();
     res.json({ roles });
   } catch (err) {
     console.error('Error al obtener roles:', err);
@@ -73,6 +65,7 @@ exports.getRoles = async (req, res) => {
 };
 
 exports.getRolbyID = async (req, res) => {
+<<<<<<< HEAD
   const idPerfil = req.params.id;
   try {
     if (!idPerfil || isNaN(Number(idPerfil)) || Number(idPerfil) <= 0) {
@@ -87,11 +80,25 @@ exports.getRolbyID = async (req, res) => {
     console.error('Error al obtener rol:', error);
     return res.status(500).json({ error: 'Error al obtener rol' });
   } 
+=======
+  const idPerfil = Number(req.params.id);
+  if (!idPerfil || idPerfil <= 0) return res.status(400).json({ error: 'ID inválido' });
+
+  try {
+    const rol = await AuthModel.getRoleById(idPerfil);
+    if (!rol) return res.status(404).json({ error: 'Rol no encontrado' });
+    res.json(rol);
+  } catch (err) {
+    console.error('Error al obtener rol:', err);
+    res.status(500).json({ error: 'Error interno' });
+  }
+>>>>>>> backend
 };
 
 exports.getDatosPersonales = async (req, res) => {
   try {
     const usuarioSesion = req.session.usuario;
+<<<<<<< HEAD
 
     if (!usuarioSesion) {
       return res.status(401).json({ error: 'No hay sesión activa' });
@@ -118,11 +125,25 @@ exports.getDatosPersonales = async (req, res) => {
     .join(' ');
 
     return res.json({
+=======
+    if (!usuarioSesion) return res.status(401).json({ error: 'No hay sesión activa' });
+
+    const perfil = await AuthModel.getDatosPersonales(usuarioSesion.idUsuario);
+    if (!perfil) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    const apellidoCompleto = [perfil.apellido_paterno, perfil.apellido_materno].filter(Boolean).join(' ');
+
+    res.json({
+>>>>>>> backend
       mensaje: 'Sesión activa',
       Datos_Personales: {
         nombre: perfil.nombre,
         apellidos: apellidoCompleto,
         usuario: perfil.usuario,
+<<<<<<< HEAD
+=======
+        perfil: perfil.perfil,
+>>>>>>> backend
         correo: perfil.correo_electronico,
         fechaNacimiento: perfil.fechaNacimiento,
         sexo: perfil.sexo,
@@ -132,7 +153,12 @@ exports.getDatosPersonales = async (req, res) => {
       }
     });
   } catch (err) {
+<<<<<<< HEAD
     console.error('Error al mostrar datos del usuario');
     res.status(500).json({error: 'Error al consultar datos del usuario', detalle: err.message })
+=======
+    console.error('Error al mostrar datos del usuario', err);
+    res.status(500).json({ error: 'Error al consultar datos del usuario', detalle: err.message });
+>>>>>>> backend
   }
 };

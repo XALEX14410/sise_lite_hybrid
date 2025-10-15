@@ -1,13 +1,8 @@
-const pool = require('../db/pool');
+const Horario = require('../models/horarioModel');
 
-exports.createHorario = async (req, res) => {
-  const { dia_semana, hora, aula, idGrupo } = req.body;
-
-  if (!dia_semana || !hora || !aula || !idGrupo) {
-    return res.status(400).json({ error: 'Faltan datos del horario' });
-  }
-
+exports.obtenerHorarios = async (req, res) => {
   try {
+<<<<<<< HEAD
     const result = await pool.query(`
       INSERT INTO dbo_horario (dia_semana, hora, aula, idGrupo)
       VALUES (?, ?, ?, ?)
@@ -33,6 +28,9 @@ exports.getAllHorarios = async (req, res) => {
                h.hora ASC
     `);
 
+=======
+    const horarios = await Horario.getAll();
+>>>>>>> backend
     res.json({ horarios });
   } catch (err) {
     console.error('Error al obtener horarios:', err);
@@ -40,6 +38,7 @@ exports.getAllHorarios = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 exports.getHorarioById = async (req, res) => {
   const idHorario = req.params.id;
 
@@ -70,19 +69,63 @@ exports.getHorarioById = async (req, res) => {
 };
 
 exports.updateHorario = async (req, res) => {
+=======
+exports.obtenerHorarioporId = async (req, res) => {
+>>>>>>> backend
   const idHorario = req.params.id;
-  const { dia_semana, hora, aula } = req.body;
+
+  if (isNaN(idHorario)) {
+    return res.status(400).json({ error: 'ID de horario inválido' });
+  }
 
   if (!dia_semana || !hora || !aula) {
     return res.status(400).json({ error: 'Faltan datos para actualizar el horario' });
   }
 
   try {
+<<<<<<< HEAD
     const result = await pool.query(`
       UPDATE dbo_horario
       SET dia_semana = ?, hora = ?, aula = ?
       WHERE idHorario = ?
     `, [dia_semana, hora, aula, idHorario]);
+=======
+    const horario = await Horario.getById(idHorario);
+
+    if (!horario) {
+      return res.status(404).json({ error: 'Horario no encontrado' });
+    }
+
+    res.json({ horario });
+  } catch (err) {
+    console.error('Error al obtener horario:', err);
+    res.status(500).json({ error: 'Error al consultar horario', detalle: err.message });
+  }
+};
+
+exports.registrarHorario = async (req, res) => {
+  const { dia_semana, hora, aula, idGrupo } = req.body;
+  try {
+    const idHorario = await Horario.create({ dia_semana, hora, aula, idGrupo });
+    res.json({
+      mensaje: 'Horario creado correctamente',
+      idHorario: Number(idHorario)
+    });
+  } catch (err) {
+    console.error('Error al crear horario:', err);
+    res.status(500).json({ error: 'Error al crear horario', detalle: err.message });
+  }
+};
+
+exports.actualizarHorario = async (req, res) => {
+  const idHorario = req.params.id;
+  try {
+    const affected = await Horario.update(idHorario, { dia_semana, hora, aula });
+
+    if (affected === 0) {
+      return res.status(404).json({ error: 'Horario no encontrado' });
+    }
+>>>>>>> backend
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Horario no encontrado' });
@@ -95,15 +138,20 @@ exports.updateHorario = async (req, res) => {
   }
 };
 
-exports.deleteHorario = async (req, res) => {
+exports.eliminarHorario = async (req, res) => {
   const idHorario = req.params.id;
-
   try {
+<<<<<<< HEAD
     const result = await pool.query(`
       DELETE FROM dbo_horario WHERE idHorario = ?
     `, [idHorario]);
 
     if (result.affectedRows === 0) {
+=======
+    const affected = await Horario.remove(idHorario);
+
+    if (affected === 0) {
+>>>>>>> backend
       return res.status(404).json({ error: 'Horario no encontrado o ya eliminado' });
     }
 

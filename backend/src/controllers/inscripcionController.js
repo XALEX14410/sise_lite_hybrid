@@ -1,22 +1,53 @@
-const pool = require('../db/pool');
+const Inscripcion = require('../models/inscripcionModel');
 
-exports.createInscripcion = async (req, res) => {
-  const { idAlumno, idGrupo } = req.body;
+exports.obtenerInscripciones = async (req, res) => {
+  try {
+    const inscripciones = await Inscripcion.getAll();
+    res.json({ inscripciones });
+  } catch (err) {
+    console.error('Error al obtener inscripciones:', err);
+    res.status(500).json({ error: 'Error al consultar inscripciones', detalle: err.message });
+  }
+};
 
-  if (!idAlumno || !idGrupo) {
-    return res.status(400).json({ error: 'Faltan datos para la inscripción' });
+exports.obtenerInscripcionesporId = async (req, res) => {
+  const idInscripcion = req.params.id;
+
+  if (isNaN(idInscripcion)) {
+    return res.status(400).json({ error: 'ID de inscripción inválido' });
   }
 
   try {
+<<<<<<< HEAD
     const existe = await pool.query(`
       SELECT * FROM dbo_inscripciones
       WHERE idAlumno = ? AND idGrupo = ?
     `, [idAlumno, idGrupo]);
+=======
+    const inscripcion = await Inscripcion.getById(idInscripcion);
+>>>>>>> backend
 
-    if (existe.length > 0) {
+    if (!inscripcion) {
+      return res.status(404).json({ error: 'Inscripción no encontrada' });
+    }
+
+    res.json({ inscripcion });
+  } catch (err) {
+    console.error('Error al obtener inscripción:', err);
+    res.status(500).json({ error: 'Error al consultar inscripción', detalle: err.message });
+  }
+};
+
+exports.registrarInscripcion = async (req, res) => {
+  const { idAlumno, idGrupo } = req.body;
+  try {
+    const idInscripcion = await Inscripcion.create({ idAlumno, idGrupo });
+
+    if (!idInscripcion) {
       return res.status(409).json({ error: 'El alumno ya está inscrito en este grupo' });
     }
 
+<<<<<<< HEAD
     // Insertar inscripción
     const result = await pool.query(`
       INSERT INTO dbo_inscripciones (idAlumno, idGrupo)
@@ -26,6 +57,11 @@ exports.createInscripcion = async (req, res) => {
     res.json({
       mensaje: 'Inscripción realizada correctamente',
       idInscripcion: Number(result.insertId)
+=======
+    res.json({
+      mensaje: 'Inscripción realizada correctamente',
+      idInscripcion: Number(idInscripcion)
+>>>>>>> backend
     });
   } catch (err) {
     console.error('Error al inscribir alumno:', err);
@@ -33,6 +69,7 @@ exports.createInscripcion = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 exports.getAllInscripciones = async (req, res) => {
   try {
     const inscripciones = await pool.query(`
@@ -100,6 +137,14 @@ exports.updateInscripcion = async (req, res) => {
     `, [idAlumno, idGrupo, idInscripcion]);
 
     if (result.affectedRows === 0) {
+=======
+exports.actualizarInscripcion = async (req, res) => {
+  const idInscripcion = req.params.id;
+  try {
+    const affected = await Inscripcion.update(idInscripcion, { idAlumno, idGrupo });
+
+    if (affected === 0) {
+>>>>>>> backend
       return res.status(404).json({ error: 'Inscripción no encontrada' });
     }
 
@@ -110,6 +155,7 @@ exports.updateInscripcion = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 exports.deleteInscripcion = async (req, res) => {
   const idInscripcion = req.params.id;
 
@@ -119,6 +165,15 @@ exports.deleteInscripcion = async (req, res) => {
     `, [idInscripcion]);
 
     if (result.affectedRows === 0) {
+=======
+exports.eliminarInscripcion = async (req, res) => {
+  const idInscripcion = req.params.id;
+
+  try {
+    const affected = await Inscripcion.remove(idInscripcion);
+
+    if (affected === 0) {
+>>>>>>> backend
       return res.status(404).json({ error: 'Inscripción no encontrada o ya eliminada' });
     }
 
