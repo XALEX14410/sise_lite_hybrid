@@ -1,6 +1,6 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+'use client'; 
+import { useState } from 'react'; 
+import { useRouter } from 'next/navigation'; 
 
 const BACK_URL = process.env.NEXT_PUBLIC_BACK_URL;
 
@@ -32,7 +32,7 @@ export default function LoginPage() {
       }
 
       console.log('Login exitoso:', data);
-      router.push('/perfil'); // redirige al perfil
+      router.push('/inicio'); 
     } catch (err) {
       console.error(err);
       setError('Error de conexión con el backend');
@@ -40,16 +40,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center mt-20">
-      <h1 className="text-2xl font-bold mb-6">Login</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col w-80">
+    <div className="flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 min-h-screen p-4">
+      <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Login</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col w-80 bg-white dark:bg-gray-800 p-6 rounded shadow-md">
         <input
           type="text"
           placeholder="Usuario"
           value={usuario}
           onChange={(e) => setUsuario(e.target.value)}
           required
-          className="mb-4 p-2 border rounded"
+          className="mb-4 p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
         />
         <input
           type="password"
@@ -57,11 +57,11 @@ export default function LoginPage() {
           value={contrasena}
           onChange={(e) => setContrasena(e.target.value)}
           required
-          className="mb-4 p-2 border rounded"
+          className="mb-4 p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
         />
         <button
           type="submit"
-          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded transition"
         >
           Ingresar
         </button>
