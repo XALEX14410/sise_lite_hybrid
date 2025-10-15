@@ -20,7 +20,7 @@ Prorroga
 Etc', PRIMARY KEY (idPago));
 CREATE TABLE dbo_becas (idBeca int(10) NOT NULL AUTO_INCREMENT, PRIMARY KEY (idBeca));
 CREATE TABLE dbo_usuario_perfil (idPerfil_Usuario int(10) NOT NULL AUTO_INCREMENT, idUsuario int(10) NOT NULL, idPerfil int(10) NOT NULL, PRIMARY KEY (idPerfil_Usuario));
-CREATE TABLE dbo_alumno (idAlumno int(10) NOT NULL AUTO_INCREMENT, idUsuario int(10) NOT NULL, idCarrera int(10) NOT NULL, matricula varchar(255), semestre_actual varchar(255), PRIMARY KEY (idAlumno));
+CREATE TABLE dbo_alumno (idAlumno int(10) NOT NULL AUTO_INCREMENT, idUsuario int(10) NOT NULL, idCarrera int(10), matricula varchar(255), semestre_actual varchar(255), PRIMARY KEY (idAlumno));
 CREATE TABLE dbo_grupo (idGrupo int(10) NOT NULL AUTO_INCREMENT, idDocente int(10) NOT NULL, idMateria int(10) NOT NULL, periodo varchar(255), clave_grupo varchar(255), cupo int(10), PRIMARY KEY (idGrupo));
 CREATE TABLE dbo_calificaciones (idCalificación int(10) NOT NULL AUTO_INCREMENT, idInscripción int(10) NOT NULL, valor int(100), observaciones varchar(255), PRIMARY KEY (idCalificación));
 CREATE TABLE dbo_inscripciones (idInscripción int(10) NOT NULL AUTO_INCREMENT, idAlumno int(10) NOT NULL, idGrupo int(10) NOT NULL, PRIMARY KEY (idInscripción));

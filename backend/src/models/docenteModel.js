@@ -79,11 +79,11 @@ const update = async (idDocente, {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    const [docenteRows] = await conn.query(`SELECT idUsuario FROM dbo_docente WHERE idDocente = ?`, [idDocente]);
+    const docenteRows = await conn.query(`SELECT idUsuario FROM dbo_docente WHERE idDocente = ?`, [idDocente]);
     if (docenteRows.length === 0) throw new Error('Docente no encontrado');
     const idUsuario = docenteRows[0].idUsuario;
 
-    const [usuarioRows] = await conn.query(`SELECT idPersona FROM dbo_usuario WHERE idUsuario = ?`, [idUsuario]);
+    const usuarioRows = await conn.query(`SELECT idPersona FROM dbo_usuario WHERE idUsuario = ?`, [idUsuario]);
     if (usuarioRows.length === 0) throw new Error('Usuario del docente no encontrado');
     const idPersona = usuarioRows[0].idPersona;
 
@@ -114,11 +114,11 @@ const remove = async (idDocente) => {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    const [docenteRows] = await conn.query(`SELECT idUsuario FROM dbo_docente WHERE idDocente = ?`, [idDocente]);
+    const docenteRows = await conn.query(`SELECT idUsuario FROM dbo_docente WHERE idDocente = ?`, [idDocente]);
     if (docenteRows.length === 0) throw new Error('Docente no encontrado');
     const idUsuario = docenteRows[0].idUsuario;
 
-    const [usuarioRows] = await conn.query(`SELECT idPersona FROM dbo_usuario WHERE idUsuario = ?`, [idUsuario]);
+    const usuarioRows = await conn.query(`SELECT idPersona FROM dbo_usuario WHERE idUsuario = ?`, [idUsuario]);
     if (usuarioRows.length === 0) throw new Error('Usuario del docente no encontrado');
     const idPersona = usuarioRows[0].idPersona;
 

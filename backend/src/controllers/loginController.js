@@ -11,35 +11,10 @@ exports.login = async (req, res) => {
     if (user.perfil === 'Docente') idEntidad = await AuthModel.getDocenteByUserId(user.idUsuario);
     if (user.perfil === 'Alumno') idEntidad = await AuthModel.getAlumnoByUserId(user.idUsuario);
 
-<<<<<<< HEAD
-    if (user.perfil === 'Docente') {
-      const docenteRows = await pool.query('SELECT idDocente FROM dbo_docente WHERE idUsuario = ?', [user.idUsuario]);
-      idEntidad = docenteRows[0]?.idDocente;
-    } else if (user.perfil === 'Alumno') {
-      const alumnoRows = await pool.query('SELECT idAlumno FROM dbo_alumno WHERE idUsuario = ?', [user.idUsuario]);
-      idEntidad = alumnoRows[0]?.idAlumno;
-    }
-
-    req.session.usuario = {
-      idUsuario: user.idUsuario,
-      idEntidad,
-      usuario: user.usuario,
-      perfil: user.perfil
-    };
-
-    res.json({
-      mensaje: 'Login exitoso',
-      usuario: {
-        id: user.idUsuario,
-        usuario: user.usuario,
-        perfil: user.perfil || 'Sin perfil asignado'
-      }
-    });
-=======
     req.session.usuario = { idUsuario: user.idUsuario, idEntidad, usuario: user.usuario, perfil: user.perfil };
 
     res.json({ mensaje: 'Login exitoso', usuario: { id: user.idUsuario, usuario: user.usuario, perfil: user.perfil } });
->>>>>>> backend
+
   } catch (err) {
     console.error('Error en login:', err);
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -65,22 +40,6 @@ exports.getRoles = async (req, res) => {
 };
 
 exports.getRolbyID = async (req, res) => {
-<<<<<<< HEAD
-  const idPerfil = req.params.id;
-  try {
-    if (!idPerfil || isNaN(Number(idPerfil)) || Number(idPerfil) <= 0) {
-      return res.status(400).json({ error: 'ID de usuario inválido' });
-    }
-    const conn = await pool.query('SELECT nombre, descripcion FROM dbo_login_perfil WHERE idPerfil = ?', [Number(idPerfil)]);
-    if (conn[0].length === 0) {
-      return res.status(404).json({ error: 'Rol no encontrado' });
-    }
-    return res.json(conn[0]);
-  } catch (error) {
-    console.error('Error al obtener rol:', error);
-    return res.status(500).json({ error: 'Error al obtener rol' });
-  } 
-=======
   const idPerfil = Number(req.params.id);
   if (!idPerfil || idPerfil <= 0) return res.status(400).json({ error: 'ID inválido' });
 
@@ -92,40 +51,11 @@ exports.getRolbyID = async (req, res) => {
     console.error('Error al obtener rol:', err);
     res.status(500).json({ error: 'Error interno' });
   }
->>>>>>> backend
 };
 
 exports.getDatosPersonales = async (req, res) => {
   try {
     const usuarioSesion = req.session.usuario;
-<<<<<<< HEAD
-
-    if (!usuarioSesion) {
-      return res.status(401).json({ error: 'No hay sesión activa' });
-    }
-    const datos = await pool.query(
-      `SELECT u.idUsuario, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
-       DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
-       p.sexo, p.curp, m.municipio, e.estado
-       FROM dbo_usuario u
-       INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
-       INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
-       INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
-       WHERE u.idUsuario = ?`,
-      [usuarioSesion.idUsuario]
-    );
-
-    if (datos.length === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-
-    const perfil = datos[0];
-    const apellidoCompleto = [perfil.apellido_paterno, perfil.apellido_materno]
-    .filter(Boolean)
-    .join(' ');
-
-    return res.json({
-=======
     if (!usuarioSesion) return res.status(401).json({ error: 'No hay sesión activa' });
 
     const perfil = await AuthModel.getDatosPersonales(usuarioSesion.idUsuario);
@@ -134,16 +64,12 @@ exports.getDatosPersonales = async (req, res) => {
     const apellidoCompleto = [perfil.apellido_paterno, perfil.apellido_materno].filter(Boolean).join(' ');
 
     res.json({
->>>>>>> backend
       mensaje: 'Sesión activa',
       Datos_Personales: {
         nombre: perfil.nombre,
         apellidos: apellidoCompleto,
         usuario: perfil.usuario,
-<<<<<<< HEAD
-=======
         perfil: perfil.perfil,
->>>>>>> backend
         correo: perfil.correo_electronico,
         fechaNacimiento: perfil.fechaNacimiento,
         sexo: perfil.sexo,
@@ -153,12 +79,7 @@ exports.getDatosPersonales = async (req, res) => {
       }
     });
   } catch (err) {
-<<<<<<< HEAD
-    console.error('Error al mostrar datos del usuario');
-    res.status(500).json({error: 'Error al consultar datos del usuario', detalle: err.message })
-=======
     console.error('Error al mostrar datos del usuario', err);
     res.status(500).json({ error: 'Error al consultar datos del usuario', detalle: err.message });
->>>>>>> backend
   }
 };

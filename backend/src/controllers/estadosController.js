@@ -1,19 +1,6 @@
 const pool = require('../db/pool');
 
 exports.getEstados = async (req, res) => {
-<<<<<<< HEAD
-  try {
-    const conn = await pool.getConnection();
-    const rows = await conn.query('SELECT id_estado, nombre FROM dbo_estados');
-    conn.release();
-
-    res.json({ estados: rows });
-  } catch (error) {
-    console.error('Error al obtener estados:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-};
-=======
   let conn;
   try {
     conn = await pool.getConnection();
@@ -77,4 +64,3 @@ exports.updateEstados = async (req, res) => {
     if (conn) conn.release();
   }
 };
->>>>>>> backend

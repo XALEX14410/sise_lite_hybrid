@@ -31,7 +31,7 @@ const getById = async (id) => {
 const create = async ({
   nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
   sexo, curp, idEstado, idMunicipio,
-  usuario, contrasena, correo_electronico, matricula, semestre_actual, idCarrera
+  usuario, contrasena, correo_electronico //matricula, semestre_actual, idCarrera
 }) => {
   const idPerfil = 4; 
 
@@ -55,9 +55,9 @@ const create = async ({
     const idUsuario = Number(usuarioResult.insertId);
 
     await conn.query(
-      `INSERT INTO dbo_alumno (idUsuario, idCarrera, matricula, semestre_actual)
-       VALUES (?, ?, ?, ?)`,
-      [idUsuario, idCarrera, matricula, semestre_actual]
+      `INSERT INTO dbo_alumno (idUsuario)
+       VALUES (?)`,
+      [idUsuario]
     );
 
     await conn.query(
@@ -80,15 +80,15 @@ const create = async ({
 
 const update = async (idAlumno, {
   nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
-  sexo, curp, idEstado, idMunicipio, usuario, contrasena, correo_electronico,
-  matricula, semestre_actual, idCarrera
+  sexo, curp, idEstado, idMunicipio, usuario, contrasena, correo_electronico
+  //matricula, semestre_actual, idCarrera
 }) => {
   let conn;
   try {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    const [alumnoRows] = await conn.query(
+    const alumnoRows = await conn.query(
       `SELECT a.idUsuario, u.idPersona 
        FROM dbo_alumno a 
        JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
@@ -117,13 +117,13 @@ const update = async (idAlumno, {
       [usuario, contrasena, correo_electronico, idUsuario]
     );
 
-    await conn.query(
+/*    await conn.query(
       `UPDATE dbo_alumno
        SET idCarrera = ?, matricula = ?, semestre_actual = ?
        WHERE idUsuario = ?`,
       [idCarrera, matricula, semestre_actual, idUsuario]
     );
-
+*/
     await conn.commit();
     return true; 
   } catch (err) {
@@ -140,7 +140,7 @@ const remove = async (idAlumno) => {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    const [alumnoRows] = await conn.query(
+    const alumnoRows = await conn.query(
       `SELECT idUsuario FROM dbo_alumno WHERE idAlumno = ?`,
       [idAlumno]
     );
@@ -151,7 +151,7 @@ const remove = async (idAlumno) => {
 
     const idUsuario = alumnoRows[0].idUsuario;
 
-    const [usuarioRows] = await conn.query(
+    const usuarioRows = await conn.query(
       `SELECT idPersona FROM dbo_usuario WHERE idUsuario = ?`,
       [idUsuario]
     );

@@ -83,7 +83,7 @@ const update = async (idAdmin, {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    const [adminRows] = await conn.query(
+    const adminRows = await conn.query(
     `SELECT u.idUsuario, u.idPersona
     FROM dbo_usuario u
     JOIN dbo_usuario_perfil up ON u.idUsuario = up.idUsuario
@@ -128,7 +128,7 @@ const remove = async (idUsuario) => {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    const [usuarioRows] = await conn.query(
+    const usuarioRows = await conn.query(
       `SELECT u.idUsuario, u.idPersona
        FROM dbo_usuario u
        JOIN dbo_usuario_perfil up ON u.idUsuario = up.idUsuario

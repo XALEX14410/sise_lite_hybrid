@@ -16,11 +16,4 @@ router.delete('/eliminar/calificaciones/:id', verificarSesion, verificarPerfil([
 
 router.get('/:id/grupos', validar(idParamSchema, 'params'), verificarSesion, verificarPerfil(["Superadmin", "Admin", "Docente"]),docenteController.obtenerGruposDocente);
 
-<<<<<<< HEAD
-router.get('/:id/grupos', verificarPerfil(['admin', 'docente']), docenteController.getGruposDelDocente);
-router.get('/:id/estudiantes', verificarSesion, docenteController.getEstudiantesDelDocente);
-router.get('/:id/resumen', verificarSesion, verificarPerfil(['docente', 'admin']), docenteController.getResumenDelDocente);
-router.get('/:id/horario', verificarSesion, verificarPerfil(['docente', 'admin']), docenteController.getHorarioPorDocente);
-=======
->>>>>>> backend
 module.exports = router;

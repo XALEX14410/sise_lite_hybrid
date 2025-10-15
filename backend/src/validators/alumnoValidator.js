@@ -118,7 +118,7 @@ const alumnoSchema = Joi.object({
       'any.required': 'El correo electrónico es obligatorio'
     }),
 
-  matricula: Joi.string()
+  /*matricula: Joi.string()
     .required()
     .messages({
       'string.base': 'La matrícula debe ser texto',
@@ -147,6 +147,7 @@ const alumnoSchema = Joi.object({
       'number.integer': 'El idCarrera debe ser un número entero',
       'any.required': 'El idCarrera es obligatorio'
     }),
+*/
 });
 
 module.exports = alumnoSchema;

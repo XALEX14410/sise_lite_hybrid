@@ -30,17 +30,8 @@ exports.registrarCarrera = async (req, res) => {
   }
 
   try {
-<<<<<<< HEAD
-    const result = await pool.query(`
-      INSERT INTO dbo_carrera (carrera, duracion_semestres, descripcion, idPlantel)
-      VALUES (?, ?, ?, ?)
-    `, [carrera, duracion_semestres, descripcion, idPlantel]);
-
-    res.json({ mensaje: 'Carrera creada correctamente', idCarrera: Number(result.insertId)});
-=======
     const idCarrera = await Carrera.create({ carrera, duracion_semestres, descripcion, idPlantel });
     res.status(201).json({ mensaje: 'Carrera creada correctamente', idCarrera });
->>>>>>> backend
   } catch (err) {
     console.error('Error al crear carrera:', err);
     res.status(500).json({ error: 'Error al crear carrera', detalle: err.message });
@@ -56,21 +47,8 @@ exports.actualizarCarrera = async (req, res) => {
   }
 
   try {
-<<<<<<< HEAD
-    const result = await pool.query(`
-      UPDATE dbo_carrera
-      SET carrera = ?, duracion_semestres = ?, descripcion = ?, idPlantel = ?
-      WHERE idCarrera = ?
-    `, [carrera, duracion_semestres, descripcion, idPlantel, idCarrera]);
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Carrera no encontrada' });
-    }
-
-=======
     const affectedRows = await Carrera.update(id, { carrera, duracion_semestres, descripcion, idPlantel });
     if (!affectedRows) return res.status(404).json({ error: 'Carrera no encontrada' });
->>>>>>> backend
     res.json({ mensaje: 'Carrera actualizada correctamente' });
   } catch (err) {
     console.error('Error al actualizar carrera:', err);
