@@ -1,33 +1,43 @@
 const pool = require('../db/pool');
 
 const getAll = async () => {
-  const rows = await pool.query(`SELECT l.idPerfil, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
+  const rows = await pool.query(
+    `SELECT 
+        u.idUsuario, 
+        l.idPerfil, 
+        p.nombre, p.apellido_paterno, p.apellido_materno, 
+        u.usuario, u.correo_electronico, 
         DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
         p.sexo, p.curp, m.municipio, e.estado
-        FROM dbo_usuario_perfil l
-        INNER JOIN dbo_usuario u ON l.idUsuario = u.idUsuario
-        INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
-        INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
-        INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
-        WHERE idPerfil = 2 `);
-  return rows;
+    FROM dbo_usuario_perfil l
+    INNER JOIN dbo_usuario u ON l.idUsuario = u.idUsuario
+    INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+    INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
+    INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
+    WHERE idPerfil = 2`
+);
+  return rows;
 };
 
 const getById = async (id) => {
-  const rows = await pool.query(
-    `SELECT l.idPerfil, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
-             DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
-             p.sexo, p.curp, m.municipio, e.estado
-      FROM dbo_usuario_perfil l
-      INNER JOIN dbo_usuario u ON l.idUsuario = u.idUsuario
-      INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
-      INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
-      INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
-      WHERE l.idPerfil = 2
-      AND l.idUsuario = ?`,
+  const rows = await pool.query(
+    `SELECT 
+        u.idUsuario, 
+        l.idPerfil, 
+        p.nombre, p.apellido_paterno, p.apellido_materno, 
+        u.usuario, u.correo_electronico, 
+        DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
+        p.sexo, p.curp, m.municipio, e.estado
+    FROM dbo_usuario_perfil l
+    INNER JOIN dbo_usuario u ON l.idUsuario = u.idUsuario
+    INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+    INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
+    INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
+    WHERE l.idPerfil = 2
+    AND l.idUsuario = ?`,
     [id]
-  );
-  return rows[0]; 
+);
+  return rows[0]; 
 };
 
 const create = async ({
