@@ -4,26 +4,16 @@ import React from 'react';
 export default function DocenteForm({ formData, setFormData, estados, municipios }) {
   return (
     <div className="flex flex-col gap-2">
-      {/* Área */}
-      <input
-        type="text"
-        placeholder="Área o Departamento"
-        value={formData.area || ''}
-        onChange={(e) => setFormData({ ...formData, area: e.target.value })}
-        required
-        className="p-2 border rounded w-full"
-      />
-
-      {/* Fecha de nacimiento */}
+       {/* Fecha de nacimiento */}
       <input
         type="date"
         placeholder="Fecha de Nacimiento"
-        value={formData.fechaNacimiento || ''}
+        value={formData.fecha_de_nacimiento || ''}
         onChange={(e) => setFormData({ ...formData, fecha_de_nacimiento: e.target.value })}
         required
         className="p-2 border rounded w-full"
       />
-
+      
       {/* Sexo */}
       <select
         value={formData.sexo || ''}

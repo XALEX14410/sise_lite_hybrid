@@ -4,17 +4,7 @@ import React from 'react';
 export default function AdminForm({ formData, setFormData, estados, municipios }) {
   return (
     <div className="flex flex-col gap-2">
-      {/* Puesto */}
-      <input
-        type="text"
-        placeholder="Puesto o Cargo"
-        value={formData.puesto || ''}
-        onChange={(e) => setFormData({ ...formData, puesto: e.target.value })}
-        required
-        className="p-2 border rounded w-full"
-      />
-
-      {/* Fecha de nacimiento */}
+       {/* Fecha de nacimiento */}
       <input
         type="date"
         placeholder="Fecha de Nacimiento"

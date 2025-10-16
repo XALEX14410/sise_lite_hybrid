@@ -58,7 +58,7 @@ export default function AdminPage() {
         const res = await fetch(`${BACK_URL}${endpoint}`, { credentials: 'include' });
         const data = await res.json();
         setRegistros(tipoUsuario === 'Alumno' ? data.alumnos :
-                     tipoUsuario === 'Docente' ? data.docentes : data.admin);
+                     tipoUsuario === 'Docente' ? data.docentes : data.admins);
       } catch (err) {
         setError('Error al cargar registros');
       } finally {
@@ -116,7 +116,7 @@ export default function AdminPage() {
       
       const data = await res2.json();
       setRegistros(tipoUsuario === 'Alumno' ? data.alumnos :
-                   tipoUsuario === 'Docente' ? data.docentes : data.admin);
+                   tipoUsuario === 'Docente' ? data.docentes : data.admins );
       
     } catch (err) {
       setError(err.message);
@@ -139,10 +139,10 @@ export default function AdminPage() {
       if (!res.ok) throw new Error('Error al eliminar');
 
       setRegistros(registros.filter((r) => {
-        if (tipoUsuario === 'Alumno') return r.idAlumno !== id;
-        if (tipoUsuario === 'Docente') return r.idDocente !== id;
-        return r.idPerfil !== id; // Admin
-      }));
+        if (tipoUsuario === 'Alumno') return r.idAlumno !== id;
+        if (tipoUsuario === 'Docente') return r.idDocente !== id;
+        return r.idUsuario !== id; 
+      }));
     } catch (err) {
       setError(err.message);
     }
