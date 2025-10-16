@@ -1,37 +1,47 @@
 const pool = require('../db/pool');
 
 const getAll = async () => {
-  const rows = await pool.query(`SELECT a.idAlumno, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
-             DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
-             p.sexo, p.curp, m.municipio, e.estado
-      FROM dbo_alumno a
-      INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
-      INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
-      INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
-      INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio`);
-  return rows;
+  const rows = await pool.query(
+    `SELECT 
+        a.idAlumno, a.matricula, a.semestre_actual, 
+        p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
+        DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
+        p.sexo, p.curp, m.municipio, e.estado,
+        c.carrera AS carrera 
+    FROM dbo_alumno a
+    INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
+    INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+    INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
+    INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
+    INNER JOIN dbo_carrera c ON a.idCarrera = c.idCarrera`
+);
+  return rows;
 };
 
 const getById = async (id) => {
-  const rows = await pool.query(
-    `SELECT a.idAlumno, p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
-             DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
-             p.sexo, p.curp, m.municipio, e.estado
-      FROM dbo_alumno a
-      INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
-      INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
-      INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
-      INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
-      WHERE a.idAlumno = ?`,
-    [id]
-  );
-  return rows[0]; 
+  const rows = await pool.query(
+    `SELECT 
+        a.idAlumno, a.matricula, a.semestre_actual, 
+        p.nombre, p.apellido_paterno, p.apellido_materno, u.usuario, u.correo_electronico, 
+        DATE_FORMAT(p.fecha_de_nacimiento, '%Y-%m-%d') AS fechaNacimiento,
+        p.sexo, p.curp, m.municipio, e.estado,
+        c.carrera AS carrera
+    FROM dbo_alumno a
+    INNER JOIN dbo_usuario u ON a.idUsuario = u.idUsuario
+    INNER JOIN dbo_persona p ON u.idPersona = p.idPersona
+    INNER JOIN dbo_estados e ON p.idEstado = e.idEstado
+    INNER JOIN dbo_municipios m ON p.idMunicipio = m.idMunicipio
+    INNER JOIN dbo_carrera c ON a.idCarrera = c.idCarrera
+    WHERE a.idAlumno = ?`,
+    [id]
+  );
+  return rows[0]; 
 };
 
 const create = async ({
   nombre, apellido_paterno, apellido_materno, fecha_de_nacimiento,
   sexo, curp, idEstado, idMunicipio,
-  usuario, contrasena, correo_electronico //matricula, semestre_actual, idCarrera
+  usuario, contrasena, correo_electronico, idCarrera //matricula, semestre_actual
 }) => {
   const idPerfil = 4; 
 
@@ -55,9 +65,9 @@ const create = async ({
     const idUsuario = Number(usuarioResult.insertId);
 
     await conn.query(
-      `INSERT INTO dbo_alumno (idUsuario)
-       VALUES (?)`,
-      [idUsuario]
+      `INSERT INTO dbo_alumno (idUsuario, matricula, idCarrera)
+       VALUES (?, ?, ?)`,
+      [idUsuario, usuario, idCarrera]
     );
 
     await conn.query(
@@ -116,8 +126,8 @@ const update = async (idAlumno, {
        WHERE idUsuario = ?`,
       [usuario, contrasena, correo_electronico, idUsuario]
     );
-
-/*    await conn.query(
+/*
+    await conn.query(
       `UPDATE dbo_alumno
        SET idCarrera = ?, matricula = ?, semestre_actual = ?
        WHERE idUsuario = ?`,

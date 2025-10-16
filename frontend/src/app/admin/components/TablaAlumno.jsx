@@ -8,8 +8,8 @@ export default function TablaAlumno({ alumnos = [], eliminarRegistro }) {
         <thead>
           <tr className="bg-gray-200 dark:bg-gray-700">
             <th className="p-3">ID</th>
-            <th className="p-3">Matrícula</th>
-            <th className="p-3">Semestre</th>
+            <th className="p-3">Carrera</th>
+            <th className="p-3">Matricula</th>
             <th className="p-3">Nombre</th>
             <th className="p-3">Apellido Paterno</th>
             <th className="p-3">Apellido Materno</th>
@@ -27,8 +27,8 @@ export default function TablaAlumno({ alumnos = [], eliminarRegistro }) {
           {alumnos.map((a, index) => (
             <tr key={a.idAlumno || index} className="border-b border-gray-200 dark:border-gray-700">
               <td className="p-3">{a.idAlumno}</td>
+              <td className="p-3">{a.carrera}</td>
               <td className="p-3">{a.matricula}</td>
-              <td className="p-3">{a.semestre_actual}</td>
               <td className="p-3">{a.nombre}</td>
               <td className="p-3">{a.apellido_paterno}</td>
               <td className="p-3">{a.apellido_materno}</td>

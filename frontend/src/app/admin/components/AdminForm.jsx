@@ -18,8 +18,8 @@ export default function AdminForm({ formData, setFormData, estados, municipios }
       <input
         type="date"
         placeholder="Fecha de Nacimiento"
-        value={formData.fechaNacimiento || ''}
-        onChange={(e) => setFormData({ ...formData, fechaNacimiento: e.target.value })}
+        value={formData.fecha_de_nacimiento || ''}
+        onChange={(e) => setFormData({ ...formData, fecha_de_nacimiento: e.target.value })}
         required
         className="p-2 border rounded w-full"
       />
@@ -39,7 +39,7 @@ export default function AdminForm({ formData, setFormData, estados, municipios }
       {/* Estado */}
       <select
         value={formData.idEstado || ''}
-        onChange={(e) => setFormData({ ...formData, idEstado: e.target.value })}
+        onChange={(e) => setFormData({ ...formData, idEstado: Number(e.target.value) })}
         required
         className="p-2 border rounded w-full"
       >
@@ -54,7 +54,7 @@ export default function AdminForm({ formData, setFormData, estados, municipios }
       {/* Municipio */}
       <select
         value={formData.idMunicipio || ''}
-        onChange={(e) => setFormData({ ...formData, idMunicipio: e.target.value })}
+        onChange={(e) => setFormData({ ...formData, idMunicipio: Number(e.target.value) })}
         required
         className="p-2 border rounded w-full"
         disabled={!municipios.length}

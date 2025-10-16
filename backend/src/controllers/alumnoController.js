@@ -25,6 +25,7 @@ exports.obtenerAlumnoPorId = async (req, res) => {
 };
 
 exports.registrarAlumno = async (req, res) => {
+  console.log('[REGISTRAR] Datos del nuevo alumno recibidos:', req.body);
   try {
     const resultado = await Alumno.create(req.body);
     res.status(201).json({ mensaje: 'Alumno creado correctamente', ...resultado });

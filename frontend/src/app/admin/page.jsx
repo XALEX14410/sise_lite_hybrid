@@ -17,6 +17,7 @@ export default function AdminPage() {
   const [tipoUsuario, setTipoUsuario] = useState('Alumno');
   const [estados, setEstados] = useState([]);
   const [municipios, setMunicipios] = useState([]);
+  const [carreras, setCarreras] = useState([]);
 
   // Cargar estados
   useEffect(() => {
@@ -24,13 +25,28 @@ export default function AdminPage() {
       try {
         const res = await fetch(`${BACK_URL}/estados`, { credentials: 'include' });
         const data = await res.json();
-        setEstados(data); // Ya que tu endpoint devuelve un array
+        setEstados(data);
       } catch (err) {
         console.error(err);
       }
     };
     cargarEstados();
   }, []);
+
+  useEffect(() => {
+    const cargarCarreras = async () => {
+      try {
+        const res = await fetch(`${BACK_URL}/admin/carreras`, { credentials: 'include' });
+        if (!res.ok) throw new Error('Fallo al cargar carreras');
+        const data = await res.json();
+        setCarreras(data.carreras); 
+      } catch (err) {
+        console.error(err);
+        setCarreras([]); 
+      }
+    };
+    cargarCarreras();
+  }, []);
 
   // Cargar registros según tipo
   useEffect(() => {
@@ -67,30 +83,45 @@ export default function AdminPage() {
 
   // Crear registro
   const crearRegistro = async (e) => {
-    e.preventDefault();
-    const endpoint = tipoUsuario === 'Alumno' ? '/admin/registrar-alumno' :
-                     tipoUsuario === 'Docente' ? '/admin/registrar-docente' : '/admin/registrar-admin';
-    try {
-      const res = await fetch(`${BACK_URL}${endpoint}`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      if (!res.ok) throw new Error('Error al crear registro');
+    e.preventDefault();
+    // 1. URL de REGISTRO (POST)
+    const endpointRegistro = tipoUsuario === 'Alumno' ? '/admin/registrar-alumno' :
+                     tipoUsuario === 'Docente' ? '/admin/registrar-docente' : '/admin/registrar-admin';
 
-      setFormData({});
-      setError('');
+    try {
+      // PETICIÓN 1: REGISTRO (POST)
+      const res = await fetch(`${BACK_URL}${endpointRegistro}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error('Error al crear registro');
 
-      // Recargar registros
-      const res2 = await fetch(`${BACK_URL}${endpoint}`, { credentials: 'include' });
-      const data = await res2.json();
-      setRegistros(tipoUsuario === 'Alumno' ? data.alumnos :
-                   tipoUsuario === 'Docente' ? data.docentes : data.admin);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+      setFormData({});
+      setError('');
+
+      // 2. URL de LECTURA/OBTENCIÓN (GET)
+      const endpointLectura = tipoUsuario === 'Alumno' ? '/admin/alumnos' :
+                     tipoUsuario === 'Docente' ? '/admin/docentes' : '/admin/administradores';
+      
+      // PETICIÓN 2: Recargar registros (GET)
+      // Usamos la nueva variable endpointLectura
+      const res2 = await fetch(`${BACK_URL}${endpointLectura}`, { credentials: 'include' });
+      
+      // Añadir una verificación de error para el GET también
+      if (!res2.ok) {
+          throw new Error(`Error al recargar registros: ${res2.status}`);
+      }
+      
+      const data = await res2.json();
+      setRegistros(tipoUsuario === 'Alumno' ? data.alumnos :
+                   tipoUsuario === 'Docente' ? data.docentes : data.admin);
+      
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   // Eliminar registro según tipo de usuario
   const eliminarRegistro = async (id) => {
@@ -145,9 +176,10 @@ export default function AdminPage() {
             <input type="text" placeholder="Usuario" value={formData.usuario || ''} onChange={(e) => setFormData({ ...formData, usuario: e.target.value })} required className="p-2 border rounded w-full"/>
             <input type="password" placeholder="Contraseña" value={formData.contrasena || ''} onChange={(e) => setFormData({ ...formData, contrasena: e.target.value })} required className="p-2 border rounded w-full"/>
             <input type="email" placeholder="Correo Electrónico" value={formData.correo_electronico || ''} onChange={(e) => setFormData({ ...formData, correo_electronico: e.target.value })} required className="p-2 border rounded w-full"/>
+            <input type="text" placeholder="CURP" value={formData.curp || ''} onChange={(e) => setFormData({ ...formData, curp: e.target.value })} required className="p-2 border rounded w-full"/>
 
             {/* Formulario específico */}
-            {tipoUsuario === 'Alumno' && <AlumnoForm formData={formData} setFormData={setFormData} estados={estados} municipios={municipios}/>}
+            {tipoUsuario === 'Alumno' && <AlumnoForm formData={formData} setFormData={setFormData} estados={estados} municipios={municipios} carreras={carreras}/>}
             {tipoUsuario === 'Docente' && <DocenteForm formData={formData} setFormData={setFormData} estados={estados} municipios={municipios}/>}
             {tipoUsuario === 'Admin' && <AdminForm formData={formData} setFormData={setFormData} estados={estados} municipios={municipios}/>}
 

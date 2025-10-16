@@ -36,6 +36,12 @@ const idParamSchema = require('../validators/idValidator');
 const { createPagoSchema, updatePagoSchema } = require('../validators/pagosValidator');
 const { createPlantelSchema, updatePlantelSchema } = require('../validators/plantelValidator');
 
+const debugBody = (req, res, next) => {
+    // 🚨 ESTO IMPRIMIRÁ LA DATA RECIBIDA ANTES DE VALIDARLA
+    console.log('[LOG DE DEPURACIÓN] Datos recibidos ANTES de la validación:', req.body);
+    next(); // Permite que la petición continúe al siguiente middleware (la validación)
+};
+
 // ===============================
 // PLANTELES
 // ===============================
@@ -83,8 +89,14 @@ router.get('/roles/:id', verificarSesion, verificarPerfil(['Superadmin']), login
 // ===============================
 router.get('/alumnos', verificarSesion, verificarPerfil(['Superadmin', 'Admin']), alumnoController.obtenerAlumnos);
 router.get('/alumnos/:id', verificarSesion, verificarPerfil(['Superadmin', 'Admin']), validar(idParamSchema, 'params'), alumnoController.obtenerAlumnoPorId);
-router.post('/registrar-alumno', verificarSesion, verificarPerfil(['Superadmin']), validar(alumnoSchema), validarUsuarioUnico, alumnoController.registrarAlumno);
-router.put('/actualizar-alumno/:id', verificarSesion, verificarPerfil(['Superadmin']), validar(idParamSchema, 'params'), validar(alumnoSchema), alumnoController.actualizarAlumno);
+router.post('/registrar-alumno', 
+    verificarSesion, 
+    verificarPerfil(['Superadmin']), 
+    debugBody, // 👈 ¡AÑADIDO AQUÍ!
+    validar(alumnoSchema), 
+    validarUsuarioUnico, 
+    alumnoController.registrarAlumno
+);router.put('/actualizar-alumno/:id', verificarSesion, verificarPerfil(['Superadmin']), validar(idParamSchema, 'params'), validar(alumnoSchema), alumnoController.actualizarAlumno);
 router.delete('/eliminar-alumno/:id', verificarSesion, verificarPerfil(['Superadmin']), validar(idParamSchema, 'params'), alumnoController.eliminarAlumno);
 
 // ===============================

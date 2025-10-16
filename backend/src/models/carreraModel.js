@@ -1,7 +1,7 @@
 const pool = require('../db/pool');
 
 const getAll = async () => {
-  const rows = await pool.query(`SELECT * FROM dbo_carreras`);
+  const rows = await pool.query(`SELECT * FROM dbo_carrera`);
   return rows;
 };
 
