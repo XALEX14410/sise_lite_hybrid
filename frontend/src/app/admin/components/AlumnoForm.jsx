@@ -69,7 +69,7 @@ export default function AlumnoForm({ formData, setFormData, estados, municipios,
         required
         className="p-2 border rounded w-full"
       >
-        <option value="">Selecciona una carrea</option>
+        <option value="">Selecciona una carrera</option>
         {carreras.map((carrera) => (
           <option key={carrera.idCarrea} value={carrera.idCarrera}>
             {carrera.carrera}
