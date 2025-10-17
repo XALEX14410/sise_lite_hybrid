@@ -1,10 +1,10 @@
 const express = require('express');
 const cors = require("cors");
-const morgan = require('morgan');
-const session = require('express-session');
+const morgan = require("morgan");
 const pool = require('./src/db/pool');
-require('dotenv').config();
+const session = require('express-session');
 
+require('dotenv').config();
 const app = express();
 
 app.use(cors({
@@ -14,7 +14,6 @@ app.use(cors({
 
 
 const loginRoutes = require('./src/routes/loginRoutes');
-
 const alumnoRoutes = require('./src/routes/alumnoRoutes');
 const docenteRoutes = require('./src/routes/docenteRoutes');
 const municipiosRoutes = require('./src/routes/municipiosRoutes');
@@ -44,14 +43,13 @@ app.use('/alumno', alumnoRoutes);
 app.use('/municipios', municipiosRoutes);
 app.use('/estados', estadosRoutes);
 app.use('/inicio', inicioRouter);
+app.use('/inicio', inicioRouter);
 
 app.get('/api/status', (req, res) => {
   res.json({ message: 'Backend funcionando' });
 });
 
 const PORT = process.env.PORT || 4000;
-
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
