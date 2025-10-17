@@ -116,14 +116,14 @@ const alumnoSchema = Joi.object({
       'any.required': 'El correo electrónico es obligatorio'
     }),
 
-  matricula: Joi.string()
+/* matricula: Joi.string()
     .required()
     .messages({
       'string.base': 'La matrícula debe ser texto',
       'string.empty': 'La matrícula no puede estar vacía',
       'any.required': 'La matrícula es obligatoria'
     }),
-/*
+    
   semestre_actual: Joi.number()
     .integer()
     .min(1)
