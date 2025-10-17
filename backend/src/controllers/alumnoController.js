@@ -82,3 +82,23 @@ exports.obtenerCalificacionesPorAlumno = async (req, res) => {
     });
   }
 };
+
+exports.obtenerHorarioporAlumno = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const horario = await Alumno.getHorario(id);
+
+    if (horario.length === 0) {
+      return res.status(404).json({ mensaje: 'No hay horarios disponibles' });
+    }
+
+    res.json({ horario });
+  } catch (error) {
+    console.error('Error al obtener horarios del alumno:', error);
+    res.status(500).json({
+      mensaje: 'Error al obtener horarios del alumno',
+      detalle: error.message,
+    });
+  }
+};

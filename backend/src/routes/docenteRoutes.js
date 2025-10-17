@@ -15,5 +15,6 @@ router.put('/actualizar/calificaciones/:id', verificarSesion, verificarPerfil(['
 router.delete('/eliminar/calificaciones/:id', verificarSesion, verificarPerfil(['Superadmin']), validar(idParamSchema, 'params'), calificacionesController.eliminarCalificacion);
 
 router.get('/:id/grupos', validar(idParamSchema, 'params'), verificarSesion, verificarPerfil(["Superadmin", "Admin", "Docente"]),docenteController.obtenerGruposDocente);
+router.get('/:id/horario', validar(idParamSchema, 'params'), verificarSesion, verificarPerfil(["Superadmin", "Admin", "Docente"]),docenteController.obtenerHorarioDocentes);
 
 module.exports = router;

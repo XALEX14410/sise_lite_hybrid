@@ -85,3 +85,23 @@ exports.obtenerGruposDocente = async (req, res) => {
     });
   }
 };
+
+exports.obtenerHorarioDocentes = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const horario = await Docente.getHorario(id);
+
+    if (horario.length === 0) {
+      return res.status(404).json({ mensaje: 'No hay horarios disponibles' });
+    }
+
+    res.json({ horario });
+  } catch (err) {
+    console.error('Error al obtener horarios del docente:', err);
+    res.status(500).json({
+      mensaje: 'Error al obtener horarios del docente',
+      detalle: err.message,
+    });
+  }
+};

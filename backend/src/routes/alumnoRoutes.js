@@ -8,5 +8,5 @@ const verificarSesion = require('../middlewares/verificarSesion');
 const alumnoController = require('../controllers/alumnoController');
 
 router.get('/:id/calificaciones', validar(idParamSchema, 'params'), verificarSesion, alumnoController.obtenerCalificacionesPorAlumno);
-
+router.get('/:id/horario',validar(idParamSchema, 'params'), verificarSesion, alumnoController.obtenerHorarioporAlumno)
 module.exports = router;

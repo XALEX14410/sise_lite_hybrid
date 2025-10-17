@@ -152,4 +152,20 @@ const getGruposByDocente = async (idDocente) => {
   return rows;
 };
 
-module.exports = { getAll, getById, create, update, remove, getGruposByDocente };
+const getHorario = async (id) => {
+  const rows = await pool.query(
+    `SELECT h.idHorario, h.dia_semana, h.hora, h.aula,
+             g.clave_grupo, m.nombre_materia, d.usuario AS docente
+      FROM dbo_horario h
+      INNER JOIN dbo_grupo g ON h.idGrupo = g.idGrupo
+      INNER JOIN dbo_materias m ON g.idMateria = m.idMateria
+      LEFT JOIN dbo_usuario d ON g.idDocente = d.idUsuario
+     WHERE g.idDocente = ?
+     ORDER BY FIELD(h.dia_semana, 'Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'),
+               h.hora ASC`,
+    [id]
+  );
+  return rows;
+};
+
+module.exports = { getAll, getById, create, update, remove, getGruposByDocente, getHorario };
